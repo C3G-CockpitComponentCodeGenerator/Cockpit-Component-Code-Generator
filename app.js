@@ -1975,7 +1975,7 @@ function applyDefaultDisplayLayout() {
     console.log('Display Layout Update');
     console.log('Active Digits :', activeDigits);
 
-    // validateDisplayLayout();
+    validateDisplayLayout();
 }
 
 /**
@@ -2013,7 +2013,7 @@ function updateDisplayLayout() {
             selectedDigits++;
         }
     }
-
+    validateDisplayLayout();
     console.log(`Selected Physical Digits : ${selectedDigits}`);
 }
 
@@ -2037,9 +2037,29 @@ function updateDisplayLayout() {
  * Initial implementation.
  * =====================================================================
  */
+/**
+ * =====================================================================
+ * Validate 7-Segment Display Layout
+ * =====================================================================
+ *
+ * Ensures the selected physical digits match the number of active
+ * digits selected by the user.
+ *
+ * Responsibilities
+ * ----------------
+ * ✓ Count selected physical digits
+ * ✓ Compare against requested digit count
+ * ✓ Update layout status
+ *
+ * Version History
+ * ---------------
+ * v1.0.0
+ * Initial implementation.
+ * =====================================================================
+ */
 function validateDisplayLayout() {
     // ------------------------------------------------------------
-    // STEP 1 - Read required number of active digits
+    // STEP 1 - Read required digit count
     // ------------------------------------------------------------
 
     const activeDigits = parseInt(document.getElementById('displayDigits').value);
@@ -2054,6 +2074,18 @@ function validateDisplayLayout() {
         if (document.getElementById(`displayDigit${i}`).checked) {
             selectedDigits++;
         }
+    }
+
+    // ------------------------------------------------------------
+    // STEP 3 - Update Status
+    // ------------------------------------------------------------
+
+    const status = document.getElementById('displayLayoutStatus');
+
+    if (selectedDigits === activeDigits) {
+        status.textContent = `✓ Layout Valid (${selectedDigits} of ${activeDigits} selected)`;
+    } else {
+        status.textContent = `✗ Layout Invalid (${selectedDigits} of ${activeDigits} selected)`;
     }
 
     console.log(`Layout Validation : ${selectedDigits}/${activeDigits}`);
