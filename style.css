@@ -1449,3 +1449,12 @@ br {
 
     text-align: center;
 }
+.layout-status {
+    margin-top: 12px;
+
+    text-align: center;
+
+    font-weight: bold;
+
+    min-height: 20px;
+}
