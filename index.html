@@ -1,0 +1,737 @@
+﻿<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Cockpit Device Code Generator SPAD.neXt</title>
+
+        <link rel="stylesheet" href="style.css" />
+    </head>
+
+    <body>
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <img src="docs/logo/logo.png" class="app-logo" alt="Cockpit Device Generator Logo" />
+
+                <div class="header-title">
+                    <h1>Cockpit Device Generator</h1>
+
+                    <h2>for SPAD.neXt</h2>
+
+                    <p>Design your cockpit. Generate your firmware. Fly with confidence.</p>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="header-info">
+                    <span>Version</span>
+                    <strong>v0.6.0-beta.0</strong>
+                </div>
+
+                <div class="header-info">
+                    <span>Board</span>
+                    <strong id="headerBoard"> Not Selected </strong>
+                </div>
+
+                <div class="header-info">
+                    <span>Status</span>
+                    <strong id="headerStatus"> Ready </strong>
+                </div>
+            </div>
+        </header>
+
+        <div class="top-workspace">
+            <section class="workspace-panel">
+                <h2>Project Configuration</h2>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Board</label>
+                        <select id="board" onchange="refreshUI()"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Allocation Mode</label>
+                        <select id="allocationMode" onchange="refreshUI()">
+                            <option value="AUTO">Automatic</option>
+                            <option value="MANUAL">Manual</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Project Name</label>
+                        <input id="projectName" type="text" oninput="refreshUI()" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Device Name</label>
+                        <input id="deviceName" type="text" oninput="refreshUI()" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Author ID</label>
+                        <input id="authorId" type="text" oninput="refreshUI()" />
+                    </div>
+
+                    
+
+                    <div class="form-group">
+                        <label>GUID</label>
+                        <input
+                            id="guid"
+                            type="text"
+                            placeholder="{2f12544e-c677-486c-82dc-7ff4aa9d3d9d}"
+                            oninput="refreshUI()"
+                        />
+
+                        <div class="guid-actions">
+                            <button
+                                id="generateGuidButton"
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="generateGUID()"
+                            >
+                                Generate GUID
+                            </button>
+                        </div>
+<br><br>
+                        <div id="boardLockNotice" class="board-lock-notice">
+                        Project configuration is locked. 1. Board cannot be changed, 2. Allocation Mode cannot be
+                        changed, 3. GUID Cannont be changed. <br>Remove all components and MCP devices or <br>start a New
+                        Project.
+                    </div>
+
+                        
+                    </div>
+                </div>
+            </section>
+
+            <div class="workspace-panel component-builder-panel">
+                <h2>Component Builder</h2>
+                <!-- General -->
+
+                <div class="builder-section">
+                    <h3>General</h3>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label> Component Type </label>
+
+                            <select id="componentType" onchange="updateComponentOptions()">
+                                <option value="encoder">Rotary Encoder</option>
+
+                                <option value="pushbutton">Push Button</option>
+
+                                <option value="toggle">Toggle Switch</option>
+
+                                <option value="rotaryswitch">Rotary Switch</option>
+
+                                <option value="axis">Axis</option>
+
+                                <option value="led">LED</option>
+
+                                <option value="sevensegment">7 Segment Display</option>
+
+                                <option value="display">Display</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="assignedToGroup">
+                            <label> Assigned To </label>
+
+                            <select id="assignedDevice">
+                                <option value="BOARD">Main Board</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuration -->
+
+                <div class="builder-section">
+                    <h3>Configuration</h3>
+ <div class="form-grid">
+                    <div class="form-group">
+                        <label> Label </label>
+
+                        <input id="componentLabel" type="text" />
+                    </div>
+
+                    <div id="pushButtonOptions" class="form-group" style="display: none">
+                        <label>Button Behavior</label>
+
+                        <select id="pushButtonBehavior">
+                            <option value="SIMPLE">Simple Button</option>
+                            <option value="ADVANCED">Advanced Button</option>
+                        </select>
+                    </div>
+
+                    <div id="manualPinOptions" class="form-group" style="display: none">
+                        <label id="manualPinLabel">GPIO Pin</label>
+                        <select id="manualPin"></select>
+                    </div>
+
+                    <div id="manualAxisPinOptions" class="form-group" style="display: none">
+                        <label>Analog Pin</label>
+                        <select id="manualAxisPin"></select>
+                    </div>
+
+                    <div id="manualEncoderPinOptions" class="form-group" style="display: none">
+                        <label>Encoder Pin A</label>
+                        <select
+                            id="manualEncoderPinA"
+                            onchange="updateDualPinDropdowns('manualEncoderPinA', 'manualEncoderPinB')"
+                        ></select>
+
+                        <label>Encoder Pin B</label>
+                        <select
+                            id="manualEncoderPinB"
+                            onchange="updateDualPinDropdowns('manualEncoderPinA', 'manualEncoderPinB')"
+                        ></select>
+                    </div>
+
+                    <div id="manualTogglePinOptions" class="form-group" style="display: none">
+                        <label>Toggle Down Pin</label>
+                        <select
+                            id="manualTogglePinA"
+                            onchange="updateDualPinDropdowns('manualTogglePinA', 'manualTogglePinB')"
+                        ></select>
+
+                        <label>Toggle Up Pin</label>
+                        <select
+                            id="manualTogglePinB"
+                            onchange="updateDualPinDropdowns('manualTogglePinA', 'manualTogglePinB')"
+                        ></select>
+                    </div>
+
+                    <div id="manualRotaryPinOptions" class="form-group" style="display: none">
+                        <label>Rotary Pins</label>
+                        <div id="manualRotaryPinsContainer"></div>
+                    </div>
+
+                    <div id="manualDeviceOptions" class="form-group" style="display: none">
+                        <label>Assigned Device</label>
+
+                        <select id="manualAssignedDevice">
+                            <option value="BOARD">Main Board</option>
+                        </select>
+                    </div>
+
+                    <div id="encoderOptions" class="form-group" style="display: none">
+                        <label> Encoder Mode </label>
+
+                        <select id="encoderMode">
+                            <option value="STANDARD">Standard</option>
+
+                            <option value="FAST">Fast</option>
+
+                            <option value="ACCELERATED">Accelerated</option>
+                        </select>
+                    </div>
+
+                    <!-- Toggle -->
+
+                    <div id="toggleOptions" class="form-group" style="display: none">
+                        <label> Toggle Type </label>
+
+                        <select id="togglePositions" onchange="updateComponentOptions()">
+                            <option value="2">2 Position</option>
+
+                            <option value="3">3 Position</option>
+                        </select>
+                    </div>
+
+                    <div id="togglePositionNamesContainer" class="form-group" style="display: none">
+                        <label> Position Names </label>
+
+                        <textarea id="togglePositionNames" rows="3">
+DOWN
+OFF
+UP</textarea
+                        >
+
+                        <small> One position name per line </small>
+                    </div>
+
+                    <!-- Rotary -->
+
+                    <div id="rotaryOptions" class="form-group" style="display: none">
+                        <label> Rotary Positions </label>
+
+                        <select id="rotaryPositions" onchange="updateComponentOptions()">
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+
+                        <label> Position Names </label>
+
+                        <textarea id="rotaryPositionNames" rows="4"> </textarea>
+
+                        <small> One per line </small>
+                    </div>
+
+                    <!-- Axis -->
+
+                    <div id="axisOptions" class="form-group" style="display: none">
+                        <label> Axis Type </label>
+
+                        <select id="axisType">
+                            <option>Potentiometer</option>
+
+                            <option>Hall Sensor</option>
+                        </select>
+                    </div>
+
+                    <!-- LED -->
+
+                    <div id="ledOptions" class="form-group" style="display: none">
+                        <label> LED Type </label>
+
+                        <select id="ledType">
+                            <option value="Standard">Standard LED</option>
+
+                            <option value="PWM">PWM Dimmable</option>
+                        </select>
+                    </div>
+
+                    <div id="sevenSegmentOptions" class="form-group" style="display: none">
+                        <label>Modules</label>
+
+                        <input
+                            id="segmentModules"
+                            type="number"
+                            min="1"
+                            max="8"
+                            value="1"
+                            onchange="updateModuleNameFields()"
+                        />
+
+                        <div id="moduleNamesContainer"></div>
+                        <div id="segmentDecimalDigits"></div>
+                    </div>
+
+                    <!-- Display -->
+
+                    <div id="displayOptions" class="form-group" style="display: none">
+                        <label> Display Type </label>
+
+                        <select id="displayType">
+                            <option value="OLED_I2C">OLED I2C</option>
+
+                            <option value="LCD_I2C">LCD I2C</option>
+
+                            <option value="LCD_PARALLEL">LCD Parallel</option>
+
+                            <option value="TFT">TFT</option>
+                        </select>
+                    </div>
+</div>
+                    <div class="builder-section">
+                        <h3>Resource Summary</h3>
+
+                        <div class="builder-stats">
+                            <div class="stat-card">
+                                <div class="stat-title">Pins</div>
+
+                                <div class="stat-value" id="builderPins">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="builder-section builder-actions">
+                        <button id="addButton" class="btn btn-primary" onclick="addOrUpdateComponent()">
+                            Add Component
+                        </button>
+
+                        <button id="cancelEditButton" onclick="cancelEdit()" style="display: none">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!--    <section class="workspace-panel" id="expansion-panel">
+                <div class="expansion-header">
+                    <h2>Expansion Manager</h2>
+                    <p class="panel-subtitle">No expansion devices configured.</p>
+
+                    <button class="btn btn-primary" onclick="addMCP()">+ Add MCP23017</button>
+                </div>
+
+                <div id="expansionList"></div>
+            </section> -->
+        </div>
+
+        <div class="bottom-workspace">
+            <div class="workspace-panel">
+                <div class="table-header">
+                    <h2>Resource Manager</h2>
+                    <span class="component-count">Board Resource</span>
+                </div>
+
+                <div class="resource-layout">
+                    <div class="resource-summary">
+                        <div class="table-header">
+                            <h3>Board Health</h3>
+                        </div>
+
+                        <div class="resource-cards">
+                            <div class="stat-card gpio">
+                                <div class="stat-title">GPIO</div>
+                                <div class="stat-value">
+                                    <span id="usedGPIO">0</span> /
+                                    <span id="nativeGPIO">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card pwm">
+                                <div class="stat-title">PWM</div>
+                                <div class="stat-value">
+                                    <span id="usedPWM">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card spi">
+                                <div class="stat-title">SPI</div>
+                                <div class="stat-value">
+                                    <span id="usedSPI">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card i2c">
+                                <div class="stat-title">I2C</div>
+                                <div class="stat-value">
+                                    <span id="usedI2C">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card display">
+                                <div class="stat-title">Displays</div>
+                                <div class="stat-value">
+                                    <span id="usedDisplay">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-card status">
+                                <div class="stat-title">Status</div>
+                                <div class="stat-value">
+                                    <span id="capacityStatus"> Capacity OK </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    <!--   <div class="usage-container">
+                            <h4>Board Utilization</h4>
+
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+
+                            <div class="allocation-text">12 / 70 GPIO Used</div>
+                        </div> --> 
+                    </div>
+                    <!-- Generates the MCP Pins MAX of 8-->
+                    <section class="expansion-manager-section">
+                        <div class="expansion-header">
+                            <h3>Expansion Manager</h3>
+                            <button class="btn btn-primary" onclick="addMCP()">+ Add MCP23017</button>
+                        </div>
+
+
+                        <div id="expansionList"></div>
+
+                         <h4>Expansion Pin Maps</h4>
+                        <div id="mcpPinMaps"></div>
+                    </section>
+
+                    <div class="resource-map">
+                        <h3>GPIO Maps</h3>
+                        <div id="nativePinMap"></div>
+
+                    <!--    <h4>Expansion Pin Maps</h4>
+                        <div id="mcpPinMaps"></div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Components Table -->
+
+        <div class="workspace-panel">
+            <div class="table-header">
+                <h2>Configured Components</h2>
+
+                <span class="component-count" id="componentCount"> 0 Components </span>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>ID</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Label</th>
+                            <th>Assigned To</th>
+                            <th>Pin Allocation</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="componentTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pin Allocation -->
+
+        <!-- <div class="workspace-panel">
+
+    <div class="table-header">
+        <h2>Pin Allocation</h2>
+    </div>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Component</th>
+                    <th>Type</th>
+                    <th>Assigned Pins</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="allocationTableBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div> -->
+        <!-- Generation & Output -->
+
+        <div class="workspace-panel">
+            <div class="section-header">
+                <h2>Generation & Output</h2>
+            </div>
+
+            <div class="generation-layout">
+                <div class="generation-panel">
+                    <h3>Generate Firmware</h3>
+
+                    <button class="btn btn-primary generate-btn" onclick="previewFirmware()">
+                        &lt;/&gt; Generate Arduino Code
+                    </button>
+
+                    <div class="generation-actions">
+                        <button class="btn btn-secondary" onclick="debugFirmware()">Developer Debug</button>
+
+                        <button class="btn btn-secondary" onclick="exportFirmware()">Export INO</button>
+
+                        <button class="btn btn-secondary" onclick="exportWiringPDF()">Export Wiring PDF</button>
+                    </div>
+                    <div id="generatedCodePreview" class="code-preview">
+                        Click "Generate Arduino Code" to preview firmware.
+                    </div>
+
+                    <!--  <div id="generationStatus" class="generation-status ready">Ready to Generate</div> -->
+                </div>
+
+                <div class="build-panel">
+                    <h3>Build Log</h3>
+
+                    <div class="build-log">
+                        <pre id="buildLog">
+[INFO] Ready.
+
+</pre
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pinTooltip" class="pin-tooltip"></div>
+
+        <!-- Scripts -->
+        <script src="boards.js"></script>
+        <script src="components.js"></script>
+        <script src="src/core/ExpansionDevice.js"></script>
+        <script src="src/core/devices/MCP23017.js"></script>
+        <script src="src/core/ExpansionManager.js"></script>
+        <script src="src/core/allocators/manualAllocator.js"></script>
+        <script src="allocator.js"></script>
+        <script src="deviceModel.js"></script>
+        <script src="firmwareModel.js"></script>
+        <script src="spadFrameworkGenerator.js"></script>
+        <script src="spadConfigGenerator.js"></script>
+        <script src="setupGenerator.js"></script>
+        <script src="inputScannerGenerator.js"></script>
+        <script src="outputgenerator.js"></script>
+        <script src="mcpgenerator.js"></script>
+        <script src="sevenSegmentGenerator.js"></script>
+        <script src="runtimeGenerator.js"></script>
+        <script src="firmwareGenerator.js"></script>
+        <script src="PDFCreator.js"></script>
+        <script src="app.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+        
+        
+        <!--
+        ---------------This block below is the pop up for the 7 segment display to set digits and decimals
+        -->
+
+        <div id="displayConfigModal"
+     class="modal"
+     style="display:none;">
+
+    <div class="modal-content">
+
+        <h3>
+           7-Segment Display Configuration
+        </h3>
+            <div class="display-row">
+             <div class="display-field"> 
+
+                <label>
+                    Number of Active Digits
+                </label>
+
+              <select id="displayDigits" onchange="updateDisplayLayout()">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                </select>
+
+             </div>
+
+           
+ 
+</div>
+
+<h4>Physical Display Layout</h4>
+
+<div class="display-grid">
+
+    <!-- Header -->
+    <div></div>
+
+    <div class="digit-header">D8</div>
+    <div class="digit-header">D7</div>
+    <div class="digit-header">D6</div>
+    <div class="digit-header">D5</div>
+    <div class="digit-header">D4</div>
+    <div class="digit-header">D3</div>
+    <div class="digit-header">D2</div>
+    <div class="digit-header">D1</div>
+
+    <!-- Used Digits -->
+    <div class="grid-row-label">
+        Digits
+    </div>
+
+    <div><input type="checkbox" id="displayDigit8"></div>
+    <div><input type="checkbox" id="displayDigit7"></div>
+    <div><input type="checkbox" id="displayDigit6"></div>
+    <div><input type="checkbox" id="displayDigit5"></div>
+    <div><input type="checkbox" id="displayDigit4"></div>
+    <div><input type="checkbox" id="displayDigit3"></div>
+    <div><input type="checkbox" id="displayDigit2"></div>
+    <div><input type="checkbox" id="displayDigit1"></div>
+
+    <!-- Decimal -->
+    <div class="grid-row-label">
+        Decimal
+    </div>
+
+    <div><input type="radio" name="displayDecimal" id="displayDecimal8" value="8"></div>
+    <div><input type="radio" name="displayDecimal" id="displayDecimal7" value="7"></div>
+    <div><input type="radio" name="displayDecimal" id="displayDecimal6" value="6"></div>
+    <div><input type="radio" name="displayDecimal" id="displayDecimal5" value="5"></div>
+    <div><input type="radio" name="displayDecimal" id="displayDecimal4" value="4"></div>
+    <div><input type="radio" name="displayDecimal" id="displayDecimal3" value="3"></div>
+    <div><input type="radio" name="displayDecimal" id="displayDecimal2" value="2"></div>
+    <div><input type="radio" name="displayDecimal" id="displayDecimal1" value="1"></div>
+
+</div>
+
+<div class="display-help">
+
+    Select the physical digit where the decimal point should appear.
+
+</div>
+
+<hr>
+
+
+
+        
+
+        <label>
+            Brightness :   =
+            <span id="brightnessValue">8</span>
+        </label>
+
+        <input type="range"
+               id="displayBrightness"
+               min="0"
+               max="15"
+               value="8">
+
+               <div class="display-options">
+        <label>
+            <input type="checkbox"
+                   id="displayReverseDigits">
+            Reverse Digits
+        </label>
+
+        <label>
+            <input type="checkbox"
+                   id="displaySuppressZeros">
+            Suppress Leading Zeros
+        </label>
+
+               </div>
+
+
+        <button type="button"
+                onclick="saveDisplayConfig()">
+            Save
+        </button>
+
+        <button type="button"
+                onclick="closeDisplayConfig()">
+            Cancel
+        </button>
+
+    </div>
+    </body>
+</html>
