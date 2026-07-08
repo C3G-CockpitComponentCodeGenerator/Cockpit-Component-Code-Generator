@@ -2090,6 +2090,15 @@ function validateDisplayLayout() {
 
     console.log(`Layout Validation : ${selectedDigits}/${activeDigits}`);
 
+    // ------------------------------------------------------------
+    // STEP 4 - Enable / Disable Save Button
+    // ------------------------------------------------------------
+    const saveButton = document.getElementById('displaySaveButton');
+    console.log('Save Button:', saveButton);
+    if (saveButton) {
+        saveButton.disabled = selectedDigits !== activeDigits;
+    }
+
     return selectedDigits === activeDigits;
 }
 
@@ -2130,7 +2139,7 @@ function saveDisplayConfig() {
         }
     }
 
-    if (selectedCount !== digits) {
+    /*  if (selectedCount !== digits) {
         alert(
             `Invalid Digit Selection
 
@@ -2144,11 +2153,15 @@ Please select exactly ${digits} digit${digits === 1 ? '' : 's'}.`
         );
 
         return;
+    } */
+
+    if (!validateDisplayLayout()) {
+        return;
     }
 
     display.digits = digits;
 
-    display.decimalDigit = parseInt(document.getElementById('displayDecimal').value);
+    //  display.decimalDigit = parseInt(document.getElementById('displayDecimal').value);
 
     display.brightness = parseInt(document.getElementById('displayBrightness').value);
 
@@ -2160,7 +2173,7 @@ Please select exactly ${digits} digit${digits === 1 ? '' : 's'}.`
 
     closeDisplayConfig();
 
-    console.log(currentDisplayComponent);
+    //  console.log(currentDisplayComponent);
 }
 
 function closeDisplayConfig() {
