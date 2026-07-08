@@ -1983,17 +1983,39 @@ function applyDefaultDisplayLayout() {
  * Update 7-Segment Display Layout
  * =====================================================================
  *
- * Placeholder.
- * This function will become the UI engine that validates the layout,
- * synchronizes decimal radio buttons and updates the dialog.
+ * Updates the popup after the user changes the physical digit layout.
+ *
+ * Responsibilities
+ * ----------------
+ * ✓ Read the current checkbox state
+ * ✓ (Validation will be added later)
+ * ✓ (Decimal synchronization will be added later)
+ *
+ * This function NEVER changes the user's checkbox selections.
  *
  * Version History
  * ---------------
  * v1.0.0
- * Initial placeholder during popup refactor.
+ * Initial implementation.
  * =====================================================================
  */
-function updateDisplayLayout() {}
+function updateDisplayLayout() {
+    // ------------------------------------------------------------
+    // STEP 1 - Count selected physical digits
+    // ------------------------------------------------------------
+
+    let selectedDigits = 0;
+
+    for (let i = 1; i <= 8; i++) {
+        const checkbox = document.getElementById(`displayDigit${i}`);
+
+        if (checkbox.checked) {
+            selectedDigits++;
+        }
+    }
+
+    console.log(`Selected Physical Digits : ${selectedDigits}`);
+}
 
 /**
  * =====================================================================
