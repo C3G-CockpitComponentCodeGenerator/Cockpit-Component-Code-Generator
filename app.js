@@ -3405,16 +3405,7 @@ function generateDisplaySVG(preview) {
             <!-- Temporary Text -->
 
 
-${renderDigit(
-    {
-        character: preview[0],
-        decimal: false,
-        brightness: 8,
-        enabled: true,
-    },
-    30,
-    CURRENT_THEME
-)}
+${generateDigitSVG(preview[0], 30)}
 ${generateDigitSVG(preview[1], 75)}
 ${generateDigitSVG(preview[2], 120)}
 ${generateDigitSVG(preview[3], 165)}
@@ -3601,6 +3592,26 @@ function drawSegment(points, active, colorOn, colorOff) {
     `;
 }
 
+function renderSegment(segment, active, colorOn, colorOff) {
+    const SEGMENTS = {
+        A: '8,6 12,2 48,2 52,6 48,10 12,10',
+
+        B: '50,8 54,12 54,44 50,48 46,44 46,12',
+
+        C: '50,50 54,54 54,86 50,90 46,86 46,54',
+
+        D: '8,88 12,84 48,84 52,88 48,92 12,92',
+
+        E: '4,50 8,54 8,86 4,90 0,86 0,54',
+
+        F: '4,8 8,12 8,44 4,48 0,44 0,12',
+
+        G: '8,47 12,43 48,43 52,47 48,51 12,51',
+    };
+
+    return drawSegment(SEGMENTS[segment], active, colorOn, colorOff);
+}
+
 /**
  * =====================================================================
  * Render SVG Segment
@@ -3642,19 +3653,19 @@ function renderDigit(digit, x, theme) {
     return `
         <g transform="translate(${x},8)">
 
-            ${renderSegment('A', activeSegments.includes('A'), theme.on, theme.off)}
+            ${renderSegment('A', activeSegments.includes('A'), theme.SEGMENT_ON, theme.SEGMENT_OFF)}
 
-            ${renderSegment('B', activeSegments.includes('B'), theme.on, theme.off)}
+            ${renderSegment('B', activeSegments.includes('B'), theme.SEGMENT_ON, theme.SEGMENT_OFF)}
 
-            ${renderSegment('C', activeSegments.includes('C'), theme.on, theme.off)}
+            ${renderSegment('C', activeSegments.includes('C'), theme.SEGMENT_ON, theme.SEGMENT_OFF)}
 
-            ${renderSegment('D', activeSegments.includes('D'), theme.on, theme.off)}
+            ${renderSegment('D', activeSegments.includes('D'), theme.SEGMENT_ON, theme.SEGMENT_OFF)}
 
-            ${renderSegment('E', activeSegments.includes('E'), theme.on, theme.off)}
+            ${renderSegment('E', activeSegments.includes('E'), theme.SEGMENT_ON, theme.SEGMENT_OFF)}
 
-            ${renderSegment('F', activeSegments.includes('F'), theme.on, theme.off)}
+            ${renderSegment('F', activeSegments.includes('F'), theme.SEGMENT_ON, theme.SEGMENT_OFF)}
 
-            ${renderSegment('G', activeSegments.includes('G'), theme.on, theme.off)}
+            ${renderSegment('G', activeSegments.includes('G'), theme.SEGMENT_ON, theme.SEGMENT_OFF)}
 
         </g>
     `;
