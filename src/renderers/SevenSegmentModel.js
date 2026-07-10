@@ -74,13 +74,27 @@ function createDigitModel() {
 }
 
 function populateDisplayModel(model, displayText) {
-    const text = String(value);
+    displayText = normalizeDisplayText(displayText);
 
-    for (let i = 0; i < text.length && i < DISPLAY_DIGIT_COUNT; i++) {
-        model.digits[i].character = text[i];
+    displayText = applyReverse(displayText);
 
-        model.digits[i].enabled = true;
-    }
+    displayText = applyLeadingZeroSuppression(displayText);
+
+    populateDigits(model, displayText);
 
     return model;
 }
+
+function normalizeDisplayText(displayText) {
+    return String(displayText);
+}
+
+function applyReverse(displayText) {
+    return displayText;
+}
+
+function applyLeadingZeroSuppression(displayText) {
+    return displayText;
+}
+
+function populateDigitModels(model, displayText) {}
