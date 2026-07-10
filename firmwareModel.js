@@ -49,6 +49,8 @@ function generateFirmwareModel(deviceModel) {
 
             decimalDigit: device.displayConfig?.decimalDigit,
 
+            decimalPhysicalDigit: device.displayConfig?.decimalPhysicalDigit,
+
             reverseDigits: device.displayConfig?.reverseDigits,
 
             brightness: device.displayConfig?.brightness,

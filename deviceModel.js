@@ -40,32 +40,6 @@ function generateDeviceModel(project) {
 
                     moduleCount: component.modules,
                 });
-
-                /*  devices.push({
-                    label: display.name,
-
-                    tag: spad.tagPrefix + sanitizeTag(display.name),
-
-                    componentType: component.type,
-
-                    spadType: spad.spadType,
-
-                    inherit: spad.inherit,
-
-                    pins: allocation.pins.map((pin) => {
-                        if (typeof pin === 'string') {
-                            return pin;
-                        }
-
-                        return `BOARD:${pin}`;
-                    }),
-
-                    displayIndex: index + 1,
-
-                    displayConfig: display,
-
-                    moduleCount: component.modules,
-                }); */
             });
 
             return;

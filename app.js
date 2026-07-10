@@ -1846,12 +1846,31 @@ function updateModuleNameFields() {
     const count = parseInt(document.getElementById('segmentModules').value);
 
     while (displayConfigs.length < count) {
-        displayConfigs.push({
+        /* displayConfigs.push({
             name: `DISPLAY${displayConfigs.length + 1}`,
 
             digits: 6,
 
             decimalDigit: 3,
+
+            brightness: 8,
+
+            reverseDigits: false,
+
+            suppressLeadingZeros: false,
+
+            usedDigits: [true, true, true, true, true, true, false, false],
+        }); */
+        displayConfigs.push({
+            name: `DISPLAY${displayConfigs.length + 1}`,
+
+            digits: 6,
+
+            // Legacy property (temporary)
+            decimalDigit: 3,
+
+            // New Version 1 property
+            decimalPhysicalDigit: 0,
 
             brightness: 8,
 
@@ -1889,35 +1908,93 @@ function updateModuleNameFields() {
     }
 }
 
+/**
+ * =====================================================================
+ * Edit 7-Segment Display Configuration
+ * =====================================================================
+ *
+ * Opens the Display Configuration dialog and restores all previously
+ * saved settings.
+ *
+ * Responsibilities
+ * ----------------
+ * ✓ Restore general display settings
+ * ✓ Restore physical digit layout
+ * ✓ Restore decimal position
+ * ✓ Refresh validation and UI
+ *
+ * NOTE:
+ * This function restores an existing configuration.
+ * It never applies the default display layout.
+ *
+ * Version History
+ * ---------------
+ * v1.0.0
+ * Initial implementation.
+ * =====================================================================
+ */
 function editDisplayConfig(index) {
     console.log('EDIT CLICKED', index);
 
+    // ------------------------------------------------------------
+    // STEP 1 - Select Display
+    // ------------------------------------------------------------
+
     currentDisplayIndex = index;
+
     const display = displayConfigs[index];
+
+    // ------------------------------------------------------------
+    // STEP 2 - Restore General Settings
+    // ------------------------------------------------------------
+
     document.getElementById('displayDigits').value = display.digits;
+
     document.getElementById('displayBrightness').value = display.brightness;
+
     document.getElementById('brightnessValue').textContent = display.brightness;
 
     document.getElementById('displayReverseDigits').checked = display.reverseDigits;
 
     document.getElementById('displaySuppressZeros').checked = display.suppressLeadingZeros;
 
+    // ------------------------------------------------------------
+    // STEP 3 - Restore Physical Digit Layout
+    // ------------------------------------------------------------
+
     for (let i = 1; i <= 8; i++) {
-        //  document.getElementById(`displayDigit${i}`).checked = display.usedDigits[i - 1];
         const checkbox = document.getElementById(`displayDigit${i}`);
 
-        console.log(`displayDigit${i}`, checkbox);
-
         if (checkbox) {
-            checkbox.checked = false;
+            checkbox.checked = display.usedDigits[i - 1];
         }
     }
-    applyDefaultDisplayLayout();
-    updateDisplayLayout();
+
+    // ------------------------------------------------------------
+    // STEP 4 - Restore Decimal Position
+    // ------------------------------------------------------------
+
+    const decimalRadio = document.getElementById(`displayDecimal${display.decimalPhysicalDigit ?? 0}`);
+
+    if (decimalRadio) {
+        decimalRadio.checked = true;
+    }
+
+    // ------------------------------------------------------------
+    // STEP 5 - Refresh UI
+    // ------------------------------------------------------------
+    // applyDefaultDisplayLayout();
+    //updateDisplayLayout();
+    validateDisplayLayout();
+    updateDecimalRadios();
+    renderDisplayPreview();
+
+    // ------------------------------------------------------------
+    // STEP 6 - Show Dialog
+    // ------------------------------------------------------------
 
     document.getElementById('displayConfigModal').style.display = 'block';
 }
-
 /**
  * =====================================================================
  * 7-Segment Display Layout Engine
@@ -1976,6 +2053,7 @@ function applyDefaultDisplayLayout() {
     console.log('Active Digits :', activeDigits);
 
     validateDisplayLayout();
+    updateDecimalRadios();
 }
 
 /**
@@ -2014,6 +2092,8 @@ function updateDisplayLayout() {
         }
     }
     validateDisplayLayout();
+    updateDecimalRadios();
+    renderDisplayPreview();
     console.log(`Selected Physical Digits : ${selectedDigits}`);
 }
 
@@ -2112,7 +2192,7 @@ function validateDisplayLayout() {
  * This function should be called once during application startup.
  * ================================================================
  */
-function initializeDisplayLayout() {
+/*function initializeDisplayLayout() {
     // ------------------------------------------------------------
     // Physical Digit Checkboxes
     // ------------------------------------------------------------
@@ -2120,7 +2200,40 @@ function initializeDisplayLayout() {
     for (let i = 1; i <= 8; i++) {
         document.getElementById(`displayDigit${i}`).addEventListener('change', updateDisplayLayout);
     }
+} */
+function initializeDisplayLayout() {
+    // ------------------------------------------------------------
+    // Physical Digit Checkboxes
+    // ------------------------------------------------------------
+
+    for (let i = 1; i <= 8; i++) {
+        document.getElementById(`displayDigit${i}`)?.addEventListener('change', updateDisplayLayout);
+    }
+
+    // ------------------------------------------------------------
+    // Decimal Position Radios
+    // ------------------------------------------------------------
+
+    for (let i = 0; i <= 8; i++) {
+        document.getElementById(`displayDecimal${i}`)?.addEventListener('change', () => {
+            console.log('Decimal Changed');
+            renderDisplayPreview();
+        });
+    }
+
+    // ------------------------------------------------------------
+    // Reverse Digits
+    // ------------------------------------------------------------
+
+    document.getElementById('displayReverseDigits')?.addEventListener('change', renderDisplayPreview);
+
+    // ------------------------------------------------------------
+    // Suppress Leading Zeros
+    // ------------------------------------------------------------
+
+    document.getElementById('displaySuppressZeros')?.addEventListener('change', renderDisplayPreview);
 }
+
 function saveDisplayConfig() {
     const display = displayConfigs[currentDisplayIndex];
 
@@ -2138,30 +2251,22 @@ function saveDisplayConfig() {
             selectedCount++;
         }
     }
-
-    /*  if (selectedCount !== digits) {
-        alert(
-            `Invalid Digit Selection
-
-Digits Configured:
-${digits}
-
-Digits Selected:
-${selectedCount}
-
-Please select exactly ${digits} digit${digits === 1 ? '' : 's'}.`
-        );
-
-        return;
-    } */
-
+    // ------------------------------------------------------------
+    // Validate Display Layout
+    // ------------------------------------------------------------
     if (!validateDisplayLayout()) {
         return;
     }
 
-    display.digits = digits;
+    // ------------------------------------------------------------
+    // Save Decimal Position
+    // ------------------------------------------------------------
 
-    //  display.decimalDigit = parseInt(document.getElementById('displayDecimal').value);
+    const selectedDecimal = document.querySelector('input[name="displayDecimal"]:checked');
+
+    display.decimalPhysicalDigit = selectedDecimal ? parseInt(selectedDecimal.value) : 0;
+
+    display.digits = digits;
 
     display.brightness = parseInt(document.getElementById('displayBrightness').value);
 
@@ -2173,7 +2278,7 @@ Please select exactly ${digits} digit${digits === 1 ? '' : 's'}.`
 
     closeDisplayConfig();
 
-    //  console.log(currentDisplayComponent);
+    console.log('DISPLAY CONFIG SAVED', displayConfigs[currentDisplayIndex]);
 }
 
 function closeDisplayConfig() {
@@ -2915,7 +3020,9 @@ function previewFirmware() {
         document.getElementById('generatedCodePreview').textContent = firmware;
 
         addBuildLog(`Generated ${firmware.length} bytes of firmware.`, 'SUCCESS');
-
+        addBuildLog(`Generated ${firmware.split('\n').length} lines of firmware.`, 'SUCCESS');
+        addBuildLog(`${project.components.length} components configured.`, 'INFO');
+        addBuildLog(`${expansionManager.getDevices().length} MCP23017 installed.`, 'INFO');
         setGenerationStatus('Generation Successful', 'success');
     } catch (err) {
         console.error(err);
@@ -2923,12 +3030,8 @@ function previewFirmware() {
         addBuildLog(err.message, 'ERROR');
 
         setGenerationStatus('Generation Failed', 'error');
-        setGenerationStatus(`${firmware.length} bytes generated`, 'success');
+        //setGenerationStatus(`${firmware.length} bytes generated`, 'success');
     }
-    addBuildLog(`Generated ${firmware.split('\n').length} lines of firmware.`, 'SUCCESS');
-    addBuildLog(`${project.components.length} components configured.`, 'INFO');
-
-    addBuildLog(`${expansionManager.getDevices().length} MCP23017 installed.`, 'INFO');
 }
 
 function clearBuildLog() {
@@ -2961,36 +3064,611 @@ function setGenerationStatus(message, state) {
     status.className = `generation-status ${state}`;
 }
 
-/*function updateDecimalOptions() {
-    const decimal = document.getElementById('displayDecimal');
-
-    if (!decimal) return;
-
-    const previousValue = decimal.value;
-
-    decimal.innerHTML = '';
-
-    const none = document.createElement('option');
-
-    none.value = 0;
-    none.textContent = 'None';
-
-    decimal.appendChild(none);
-
+/**
+ * =====================================================================
+ * Update Decimal Radio Buttons
+ * =====================================================================
+ *
+ * Synchronizes the decimal radio buttons with the selected
+ * physical display layout.
+ *
+ * Responsibilities
+ * ----------------
+ * ✓ Enable decimal radios for active digits
+ * ✓ Disable decimal radios for inactive digits
+ * ✓ Keep "None" always enabled
+ *
+ * NOTE:
+ * This function does NOT change the selected decimal yet.
+ *
+ * Version History
+ * ---------------
+ * v1.0.0
+ * Initial implementation.
+ * =====================================================================
+ */
+function updateDecimalRadios() {
+    // ------------------------------------------------------------
+    // STEP 1 - Enable / Disable Decimal Radios
+    // ------------------------------------------------------------
+    console.log('updateDecimalRadios()');
     for (let i = 1; i <= 8; i++) {
-        const checkbox = document.getElementById(`displayDigit${i}`);
+        const digitCheckbox = document.getElementById(`displayDigit${i}`);
 
-        if (!checkbox?.checked) continue;
+        const decimalRadio = document.getElementById(`displayDecimal${i}`);
 
-        const option = document.createElement('option');
-
-        option.value = i;
-        option.textContent = i;
-
-        decimal.appendChild(option);
+        decimalRadio.disabled = !digitCheckbox.checked;
     }
 
-    const valid = [...decimal.options].some((o) => o.value === previousValue);
+    // ------------------------------------------------------------
+    // STEP 2 - "None" is always available
+    // ------------------------------------------------------------
 
-    decimal.value = valid ? previousValue : '0';
-}*/
+    document.getElementById('displayDecimal0').disabled = false;
+
+    console.log('Decimal radios updated.');
+
+    // ------------------------------------------------------------
+    // STEP 3 - Ensure Current Decimal Selection Is Valid
+    // ------------------------------------------------------------
+
+    let selectedRadio = document.querySelector('input[name="displayDecimal"]:checked');
+
+    if (selectedRadio && selectedRadio.disabled) {
+        document.getElementById('displayDecimal0').checked = true;
+
+        console.log('Decimal moved to None.');
+    }
+    renderDisplayPreview();
+}
+
+/**
+ * =====================================================================
+ * Render Live Display Preview
+ * =====================================================================
+ *
+ * Generates a live preview of the configured 7-Segment display.
+ *
+ * Version History
+ * ---------------------------------------------------------------------
+ * v1.0.0
+ * Initial Preview Engine
+ * =====================================================================
+ */
+function renderDisplayPreview() {
+    // ------------------------------------------------------------
+    // Build Preview
+    // ------------------------------------------------------------
+
+    // let preview = '';
+
+    // ------------------------------------------------------------
+    // Read Current Display Settings
+    // ------------------------------------------------------------
+
+    const reverse = document.getElementById('displayReverseDigits').checked;
+
+    const suppressLeadingZeros = document.getElementById('displaySuppressZeros').checked;
+
+    const selectedDecimal = document.querySelector('input[name="displayDecimal"]:checked');
+
+    const decimalPhysicalDigit = selectedDecimal ? parseInt(selectedDecimal.value) : 0;
+
+    // ------------------------------------------------------------
+    // Test Value
+    // ------------------------------------------------------------
+
+    //   let preview = buildPreviewCharacters();
+
+    let preview = buildPreviewCharacters();
+
+    preview = applyReverse(preview);
+
+    preview = applyDecimal(preview);
+
+    preview = applySuppressLeadingZeros(preview);
+
+    //  document.getElementById('displayPreview').textContent = preview;
+    document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview);
+}
+
+/**
+ * =====================================================================
+ * Build Preview Characters
+ * =====================================================================
+ *
+ * Creates the preview string based on the active physical digits.
+ *
+ * Example
+ * -------
+ * --------
+ * -123456-
+ * --1234--
+ *
+ * No decimal.
+ * No reverse.
+ * =====================================================================
+ */
+function buildPreviewCharacters() {
+    let preview = '';
+
+    // const testDigits = ['1', '2', '3', '4', '5', '6', '7', '8'];
+    const testValue = '12345678';
+
+    let testDigits = testValue.split('');
+
+    let digitIndex = 0;
+
+    for (let physical = 8; physical >= 1; physical--) {
+        const enabled = document.getElementById(`displayDigit${physical}`).checked;
+
+        if (enabled) {
+            preview += testDigits[digitIndex];
+
+            digitIndex++;
+        } else {
+            preview += '-';
+        }
+    }
+
+    return preview;
+}
+
+/**
+ * =====================================================================
+ * Apply Decimal Point
+ * =====================================================================
+ *
+ * Inserts the decimal point into the preview string based on the
+ * selected physical digit.
+ *
+ * Example
+ * -------
+ * -123456-
+ *
+ * Decimal = D4
+ *
+ * Result
+ * ------
+ * -123.456-
+ * =====================================================================
+ */
+function applyDecimal(preview) {
+    const selectedDecimal = document.querySelector('input[name="displayDecimal"]:checked');
+
+    const decimalPhysicalDigit = selectedDecimal ? parseInt(selectedDecimal.value) : 0;
+
+    let result = '';
+
+    let physical = 8;
+
+    for (const ch of preview) {
+        result += ch;
+
+        if (physical === decimalPhysicalDigit && ch !== '-') {
+            result += '.';
+        }
+
+        physical--;
+    }
+
+    return result;
+}
+
+/**
+ * =====================================================================
+ * Apply Reverse Display
+ * =====================================================================
+ *
+ * Reverses only the active display characters.
+ *
+ * Example
+ * -------
+ * -123456-
+ *
+ * becomes
+ *
+ * -654321-
+ *
+ * Inactive positions remain fixed.
+ * =====================================================================
+ */
+function applyReverse(preview) {
+    if (!document.getElementById('displayReverseDigits').checked) {
+        return preview;
+    }
+
+    // ------------------------------------------------------------
+    // Collect active characters
+    // ------------------------------------------------------------
+
+    const active = [];
+
+    for (const ch of preview) {
+        if (ch !== '-' && ch !== '.') {
+            active.push(ch);
+        }
+    }
+
+    active.reverse();
+
+    // ------------------------------------------------------------
+    // Rebuild Preview
+    // ------------------------------------------------------------
+
+    let result = '';
+
+    let index = 0;
+
+    for (const ch of preview) {
+        if (ch === '-') {
+            result += '-';
+        } else if (ch === '.') {
+            result += '.';
+        } else {
+            result += active[index++];
+        }
+    }
+
+    return result;
+}
+
+/**
+ * =====================================================================
+ * Apply Suppress Leading Zeros
+ * =====================================================================
+ *
+ * Replaces leading zeros with inactive digits.
+ *
+ * Example
+ * -------
+ * -001.234-
+ *
+ * becomes
+ *
+ * --1.234-
+ * =====================================================================
+ */
+function applySuppressLeadingZeros(preview) {
+    // ------------------------------------------------------------
+    // Feature Disabled
+    // ------------------------------------------------------------
+
+    if (!document.getElementById('displaySuppressZeros').checked) {
+        return preview;
+    }
+
+    let result = '';
+    let suppress = true;
+
+    for (const ch of preview) {
+        // Keep inactive positions
+        if (ch === '-') {
+            result += '-';
+            continue;
+        }
+
+        // Keep decimal point
+        if (ch === '.') {
+            result += '.';
+            continue;
+        }
+
+        // Suppress leading zeros
+        if (suppress && ch === '0') {
+            result += '-';
+            continue;
+        }
+
+        // First non-zero digit found
+        suppress = false;
+
+        result += ch;
+    }
+
+    return result;
+}
+
+/**
+ * =====================================================================
+ * Generate SVG Display
+ * =====================================================================
+ *
+ * Generates the SVG representation of the display preview.
+ *
+ * Version History
+ * ---------------------------------------------------------------------
+ * v1.0.0
+ * Initial SVG Renderer
+ * =====================================================================
+ */
+function generateDisplaySVG(preview) {
+    return `
+        <svg
+            width="100%"
+            height="80"
+            viewBox="0 0 420 80"
+            xmlns="http://www.w3.org/2000/svg">
+
+            <!-- Module Background -->
+
+            <rect
+                x="2"
+                y="2"
+                width="416"
+                height="76"
+                rx="8"
+                fill="#141414"
+                stroke="#3a3a3a"
+                stroke-width="2"/>
+
+            <!-- Temporary Text -->
+
+
+${renderDigit(
+    {
+        character: preview[0],
+        decimal: false,
+        brightness: 8,
+        enabled: true,
+    },
+    30,
+    CURRENT_THEME
+)}
+${generateDigitSVG(preview[1], 75)}
+${generateDigitSVG(preview[2], 120)}
+${generateDigitSVG(preview[3], 165)}
+${generateDigitSVG(preview[4], 210)}
+${generateDigitSVG(preview[5], 255)}
+${generateDigitSVG(preview[6], 300)}
+${generateDigitSVG(preview[7], 345)}
+${generateDigitSVG(preview[8] ?? '', 390)}
+
+        </svg>
+    `;
+}
+
+/**
+ * =====================================================================
+ * 7-Segment Colour Map
+ * =====================================================================
+ *
+ *  */
+//const SEGMENT_ON = '#FFC000';
+
+//const SEGMENT_OFF = '#242424';
+
+//const MODULE_BACKGROUND = '#141414';
+
+//const MODULE_BORDER = '#444444';
+
+// =====================================================================
+// SVG Display Renderer Constants
+// =====================================================================
+
+// Module
+
+const MODULE_WIDTH = 420;
+const MODULE_HEIGHT = 80;
+
+const MODULE_PADDING = 12;
+
+// Digits
+
+const DIGIT_WIDTH = 40;
+const DIGIT_HEIGHT = 64;
+
+const DIGIT_SPACING = 10;
+
+// Segment Geometry
+
+const SEGMENT_THICKNESS = 6;
+const SEGMENT_CHAMFER = 3;
+
+// Colours
+
+const SEGMENT_ON = '#FFC000'; // Amber
+const SEGMENT_OFF = '#2A2A2A';
+
+const MODULE_BACKGROUND = '#141414';
+const MODULE_BORDER = '#3A3A3A';
+
+const DISPLAY_THEMES = {
+    amber: {
+        on: '#FFC000',
+
+        off: '#2A2A2A',
+    },
+
+    blue: {
+        on: '#33CCFF',
+
+        off: '#2A2A2A',
+    },
+};
+
+const CURRENT_THEME = DISPLAY_THEMES.amber;
+
+// =====================================================================
+// Master Segment Geometry
+// =====================================================================
+
+const SEGMENT_POINTS = {
+    A: '8,6 12,2 48,2 52,6 48,10 12,10',
+
+    B: '',
+
+    C: '',
+
+    D: '',
+
+    E: '',
+
+    F: '',
+
+    G: '',
+};
+
+// const MASTER_SEGMENT_PATH = 'M6,4 L10,0 L42,0 L46,4 L42,8 L10,8 Z';
+
+/*const SEGMENT_LAYOUT = {
+    A: { x: 0, y: 0, rotation: 0 },
+
+    B: { x: 44, y: 4, rotation: 90 },
+
+    C: { x: 44, y: 48, rotation: 90 },
+
+    D: { x: 0, y: 88, rotation: 0 },
+
+    E: { x: 0, y: 48, rotation: 90 },
+
+    F: { x: 0, y: 4, rotation: 90 },
+
+    G: { x: 0, y: 44, rotation: 0 },
+}; */
+// =====================================================================
+// Master SVG Segment Library
+// =====================================================================
+
+const SEGMENT_HORIZONTAL_PATH = '';
+
+const SEGMENT_VERTICAL_PATH = '';
+
+/**
+ * =====================================================================
+ * 7-Segment Character Map
+ * =====================================================================
+ *
+ * Segment Naming
+ *
+ *      A
+ *    -----
+ * F |     | B
+ *   |  G  |
+ *    -----
+ * E |     | C
+ *   |     |
+ *    -----
+ *      D
+ *
+ * =====================================================================
+ */
+
+const SEGMENT_MAP = {
+    0: ['A', 'B', 'C', 'D', 'E', 'F'],
+
+    1: ['B', 'C'],
+
+    2: ['A', 'B', 'G', 'E', 'D'],
+
+    3: ['A', 'B', 'C', 'D', 'G'],
+
+    4: ['F', 'G', 'B', 'C'],
+
+    5: ['A', 'F', 'G', 'C', 'D'],
+
+    6: ['A', 'F', 'G', 'E', 'C', 'D'],
+
+    7: ['A', 'B', 'C'],
+
+    8: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+
+    9: ['A', 'B', 'C', 'D', 'F', 'G'],
+
+    '-': ['G'],
+
+    ' ': [],
+};
+/**
+ * =====================================================================
+ * Generate 7-Segment Digit
+ * =====================================================================
+ *
+ * Generates a single SVG digit.
+ *
+ * Version 1
+ * ----------
+ * Temporary text renderer.
+ * =====================================================================
+ */
+
+function drawSegment(points, active, colorOn, colorOff) {
+    return `
+        <polygon
+            points="${points}"
+            fill="${active ? colorOn : colorOff}"
+        />
+    `;
+}
+
+/**
+ * =====================================================================
+ * Render SVG Segment
+ * =====================================================================
+ *
+ * Renders one 7-segment LED using the master segment path and layout.
+ * =====================================================================
+ */
+/*function renderSegment(segmentName, active, colorOn, colorOff) {
+    const layout = SEGMENT_LAYOUT[segmentName];
+
+    return `
+        <path
+            d="${MASTER_SEGMENT_PATH}"
+            transform="
+                translate(${layout.x},${layout.y})
+                rotate(${layout.rotation},26,4)
+            "
+            fill="${active ? colorOn : colorOff}"
+        />
+    `;
+} */
+
+function renderHorizontalSegment(active, colorOn, colorOff) {}
+
+function renderVerticalSegment(active, colorOn, colorOff) {}
+
+/**
+ * =====================================================================
+ * Render Digit
+ * =====================================================================
+ *
+ * Renders one complete 7-segment digit.
+ * =====================================================================
+ */
+function renderDigit(digit, x, theme) {
+    const activeSegments = SEGMENT_MAP[digit.character] ?? [];
+
+    return `
+        <g transform="translate(${x},8)">
+
+            ${renderSegment('A', activeSegments.includes('A'), theme.on, theme.off)}
+
+            ${renderSegment('B', activeSegments.includes('B'), theme.on, theme.off)}
+
+            ${renderSegment('C', activeSegments.includes('C'), theme.on, theme.off)}
+
+            ${renderSegment('D', activeSegments.includes('D'), theme.on, theme.off)}
+
+            ${renderSegment('E', activeSegments.includes('E'), theme.on, theme.off)}
+
+            ${renderSegment('F', activeSegments.includes('F'), theme.on, theme.off)}
+
+            ${renderSegment('G', activeSegments.includes('G'), theme.on, theme.off)}
+
+        </g>
+    `;
+}
+
+function generateDigitSVG(character, x, color) {
+    const activeSegments = SEGMENT_MAP[character] ?? [];
+
+    const A = activeSegments.includes('A');
+
+    return `
+      <g transform="translate(${x},0)">
+  
+  ${renderSegment('A', A, color, SEGMENT_OFF)}
+</g>
+    `;
+}
