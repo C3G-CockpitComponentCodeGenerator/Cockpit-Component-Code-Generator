@@ -31,6 +31,7 @@
 
         <div id="renderer"></div>
 
+        <script src="src/renderers/RendererNamespace.js"></script>
         <script src="src/renderers/SevenSegmentGeometry.js"></script>
         <script src="src/renderers/SevenSegmentThemes.js"></script>
         <script src="src/renderers/SevenSegmentModel.js"></script>
@@ -38,21 +39,19 @@
 
         <script>
             const model = C3G.Renderer.createDisplayModel();
-            model.theme = DISPLAY_THEMES.BLUE;
+            //  model.theme = DISPLAY_THEMES.BLUE;
+
+            model.theme = C3G.Renderer.DISPLAY_THEMES.AMBER;
 
             C3G.Renderer.populateDisplayModel(model, '1234.56');
 
             document.getElementById('renderer').innerHTML = C3G.Renderer.renderDisplay(model);
 
-            //populateDisplayModel(model, '1234.56');
-
-            // document.getElementById('renderer').innerHTML = renderDisplay(model);
-
-            const svg = renderDisplay(model);
+            /*        const svg = renderDisplay(model);
 
             console.log(svg);
 
-            document.getElementById('renderer').innerHTML = svg;
+            document.getElementById('renderer').innerHTML = svg; */
         </script>
     </body>
 </html>

@@ -23,3 +23,27 @@ const SEGMENT_MAP = {
 
     ' ': [],
 };
+
+# Renderer Extraction
+
+## Legacy Items in app.js
+
+- [ ] SEGMENT_MAP
+- [ ] DISPLAY_THEMES
+- [ ] CURRENT_THEME
+- [ ] drawSegment()
+- [ ] generateDigitSVG()
+- [ ] generateDisplaySVG()
+- [ ] renderDigit()
+
+## New Renderer Library
+
+- [x] Geometry
+- [x] Themes
+- [x] Display Model
+- [x] SVG Renderer
+- [ ] Namespace
+- [ ] Private Scope
+- [ ] Public API
+- [ ] Integration
+- [ ] Legacy Removal

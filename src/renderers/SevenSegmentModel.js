@@ -27,109 +27,119 @@
 // ============================================================================
 // Model Types
 // ============================================================================
-const DISPLAY_DIGIT_COUNT = 8;
-const MODEL_TYPES = Object.freeze({
-    DIGIT: 'DIGIT',
 
-    DISPLAY: 'DISPLAY',
-});
+(() => {
+    const DEFAULT_THEME = C3G.Renderer.DEFAULT_THEME;
 
-const DEFAULT_DIGIT_MODEL = Object.freeze({
-    character: ' ',
+    const DISPLAY_DIGIT_COUNT = 8;
+    const MODEL_TYPES = Object.freeze({
+        DIGIT: 'DIGIT',
 
-    decimal: false,
+        DISPLAY: 'DISPLAY',
+    });
 
-    enabled: false,
+    const DEFAULT_DIGIT_MODEL = Object.freeze({
+        character: ' ',
 
-    brightness: 8,
-});
+        decimal: false,
 
-const DEFAULT_DISPLAY_MODEL = Object.freeze({
-    digits: [],
+        enabled: false,
 
-    theme: DEFAULT_THEME,
+        brightness: 8,
+    });
 
-    brightness: 8,
-});
+    const DEFAULT_DISPLAY_MODEL = Object.freeze({
+        digits: [],
 
-function createDisplayModel() {
-    const model = {
-        ...DEFAULT_DISPLAY_MODEL,
-    };
+        theme: DEFAULT_THEME,
 
-    model.digits = [];
+        brightness: 8,
+    });
 
-    for (let i = 0; i < DISPLAY_DIGIT_COUNT; i++) {
-        model.digits.push(createDigitModel());
-    }
+    function createDisplayModel() {
+        const model = {
+            ...DEFAULT_DISPLAY_MODEL,
+        };
 
-    return model;
-}
+        model.digits = [];
 
-function createDigitModel() {
-    return {
-        ...DEFAULT_DIGIT_MODEL,
-    };
-}
-
-function populateDisplayModel(model, displayText) {
-    displayText = normalizeDisplayText(displayText);
-
-    displayText = applyReverse(displayText);
-
-    displayText = applyLeadingZeroSuppression(displayText);
-
-    populateDigits(model, displayText);
-
-    return model;
-}
-
-// ============================================================================
-// Populate Digit Models
-// ============================================================================
-
-function populateDigits(model, displayText) {
-    let digitIndex = 0;
-
-    for (let i = 0; i < displayText.length && digitIndex < DISPLAY_DIGIT_COUNT; i++) {
-        const ch = displayText[i];
-
-        // Decimal point belongs to the previous digit
-        if (ch === '.') {
-            if (digitIndex > 0) {
-                model.digits[digitIndex - 1].decimal = true;
-            }
-            continue;
+        for (let i = 0; i < DISPLAY_DIGIT_COUNT; i++) {
+            model.digits.push(createDigitModel());
         }
 
-        const digit = model.digits[digitIndex];
-
-        digit.character = ch;
-        digit.enabled = ch !== ' ';
-        digit.decimal = false;
-
-        digitIndex++;
+        return model;
     }
 
-    // Clear remaining digits
-    while (digitIndex < DISPLAY_DIGIT_COUNT) {
-        model.digits[digitIndex].character = ' ';
-        model.digits[digitIndex].enabled = false;
-        model.digits[digitIndex].decimal = false;
-        digitIndex++;
+    function createDigitModel() {
+        return {
+            ...DEFAULT_DIGIT_MODEL,
+        };
     }
-}
 
-function normalizeDisplayText(displayText) {
-    return String(displayText);
-}
+    function populateDisplayModel(model, displayText) {
+        displayText = normalizeDisplayText(displayText);
 
-function applyReverse(displayText) {
-    return displayText;
-}
+        displayText = applyReverse(displayText);
 
-function applyLeadingZeroSuppression(displayText) {
-    return displayText;
-}
+        displayText = applyLeadingZeroSuppression(displayText);
 
-function populateDigitModels(model, displayText) {}
+        populateDigits(model, displayText);
+
+        return model;
+    }
+
+    // ============================================================================
+    // Populate Digit Models
+    // ============================================================================
+
+    function populateDigits(model, displayText) {
+        let digitIndex = 0;
+
+        for (let i = 0; i < displayText.length && digitIndex < DISPLAY_DIGIT_COUNT; i++) {
+            const ch = displayText[i];
+
+            // Decimal point belongs to the previous digit
+            if (ch === '.') {
+                if (digitIndex > 0) {
+                    model.digits[digitIndex - 1].decimal = true;
+                }
+                continue;
+            }
+
+            const digit = model.digits[digitIndex];
+
+            digit.character = ch;
+            digit.enabled = ch !== ' ';
+            digit.decimal = false;
+
+            digitIndex++;
+        }
+
+        // Clear remaining digits
+        while (digitIndex < DISPLAY_DIGIT_COUNT) {
+            model.digits[digitIndex].character = ' ';
+            model.digits[digitIndex].enabled = false;
+            model.digits[digitIndex].decimal = false;
+            digitIndex++;
+        }
+    }
+
+    function normalizeDisplayText(displayText) {
+        return String(displayText);
+    }
+
+    function applyReverse(displayText) {
+        return displayText;
+    }
+
+    function applyLeadingZeroSuppression(displayText) {
+        return displayText;
+    }
+
+    function populateDigitModels(model, displayText) {}
+
+    Object.assign(C3G.Renderer, {
+        createDisplayModel,
+        populateDisplayModel,
+    });
+})();

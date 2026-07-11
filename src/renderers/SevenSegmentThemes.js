@@ -26,142 +26,149 @@
  *
  ******************************************************************************/
 
-// ============================================================================
-// Available Themes
-// ============================================================================
+(() => {
+    // ============================================================================
+    // Available Themes
+    // ============================================================================
 
-const THEME_TYPES = Object.freeze({
-    AMBER: 'AMBER',
+    const THEME_TYPES = Object.freeze({
+        AMBER: 'AMBER',
 
-    BLUE: 'BLUE',
+        BLUE: 'BLUE',
 
-    GREEN: 'GREEN',
+        GREEN: 'GREEN',
 
-    WHITE: 'WHITE',
-});
+        WHITE: 'WHITE',
+    });
 
-// ============================================================================
-// Colour Palette
-// ============================================================================
+    // ============================================================================
+    // Colour Palette
+    // ============================================================================
 
-const THEME_COLOURS = Object.freeze({
-    BLACK: '#000000',
+    const THEME_COLOURS = Object.freeze({
+        BLACK: '#000000',
 
-    DARK_GREY: '#1A1A1A',
+        DARK_GREY: '#1A1A1A',
 
-    GREY: '#2A2A2A',
+        GREY: '#2A2A2A',
 
-    LIGHT_GREY: '#505050',
+        LIGHT_GREY: '#505050',
 
-    AMBER: '#FFC000',
+        AMBER: '#FFC000',
 
-    BLUE: '#33CCFF',
+        BLUE: '#33CCFF',
 
-    GREEN: '#66FF66',
+        GREEN: '#66FF66',
 
-    WHITE: '#F5F5F5',
-});
+        WHITE: '#F5F5F5',
+    });
 
-// ============================================================================
-// Amber Theme
-// ============================================================================
+    // ============================================================================
+    // Amber Theme
+    // ============================================================================
 
-const AMBER_THEME = Object.freeze({
-    NAME: THEME_TYPES.AMBER,
+    const AMBER_THEME = Object.freeze({
+        NAME: THEME_TYPES.AMBER,
 
-    DISPLAY_NAME: 'Amber',
+        DISPLAY_NAME: 'Amber',
 
-    SEGMENT_ON: THEME_COLOURS.AMBER,
+        SEGMENT_ON: THEME_COLOURS.AMBER,
 
-    SEGMENT_OFF: THEME_COLOURS.GREY,
+        SEGMENT_OFF: THEME_COLOURS.GREY,
 
-    MODULE_BACKGROUND: THEME_COLOURS.BLACK,
+        MODULE_BACKGROUND: THEME_COLOURS.BLACK,
 
-    MODULE_BORDER: THEME_COLOURS.LIGHT_GREY,
+        MODULE_BORDER: THEME_COLOURS.LIGHT_GREY,
 
-    GLOW_COLOUR: THEME_COLOURS.AMBER,
+        GLOW_COLOUR: THEME_COLOURS.AMBER,
 
-    GLOW_STRENGTH: 0.35,
-});
+        GLOW_STRENGTH: 0.35,
+    });
 
-// ============================================================================
-// Blue Theme
-// ============================================================================
+    // ============================================================================
+    // Blue Theme
+    // ============================================================================
 
-const BLUE_THEME = Object.freeze({
-    NAME: THEME_TYPES.BLUE,
+    const BLUE_THEME = Object.freeze({
+        NAME: THEME_TYPES.BLUE,
 
-    DISPLAY_NAME: 'Blue',
+        DISPLAY_NAME: 'Blue',
 
-    SEGMENT_ON: THEME_COLOURS.BLUE,
+        SEGMENT_ON: THEME_COLOURS.BLUE,
 
-    SEGMENT_OFF: THEME_COLOURS.GREY,
+        SEGMENT_OFF: THEME_COLOURS.GREY,
 
-    MODULE_BACKGROUND: THEME_COLOURS.BLACK,
+        MODULE_BACKGROUND: THEME_COLOURS.BLACK,
 
-    MODULE_BORDER: THEME_COLOURS.LIGHT_GREY,
+        MODULE_BORDER: THEME_COLOURS.LIGHT_GREY,
 
-    GLOW_COLOUR: THEME_COLOURS.BLUE,
+        GLOW_COLOUR: THEME_COLOURS.BLUE,
 
-    GLOW_STRENGTH: 0.35,
-});
+        GLOW_STRENGTH: 0.35,
+    });
 
-// ============================================================================
-// Green Theme
-// ============================================================================
+    // ============================================================================
+    // Green Theme
+    // ============================================================================
 
-const GREEN_THEME = Object.freeze({
-    NAME: THEME_TYPES.GREEN,
+    const GREEN_THEME = Object.freeze({
+        NAME: THEME_TYPES.GREEN,
 
-    DISPLAY_NAME: 'Green',
+        DISPLAY_NAME: 'Green',
 
-    SEGMENT_ON: THEME_COLOURS.GREEN,
+        SEGMENT_ON: THEME_COLOURS.GREEN,
 
-    SEGMENT_OFF: THEME_COLOURS.GREY,
+        SEGMENT_OFF: THEME_COLOURS.GREY,
 
-    MODULE_BACKGROUND: THEME_COLOURS.BLACK,
+        MODULE_BACKGROUND: THEME_COLOURS.BLACK,
 
-    MODULE_BORDER: THEME_COLOURS.LIGHT_GREY,
+        MODULE_BORDER: THEME_COLOURS.LIGHT_GREY,
 
-    GLOW_COLOUR: THEME_COLOURS.GREEN,
+        GLOW_COLOUR: THEME_COLOURS.GREEN,
 
-    GLOW_STRENGTH: 0.35,
-});
+        GLOW_STRENGTH: 0.35,
+    });
 
-// ============================================================================
-// White Theme
-// ============================================================================
+    // ============================================================================
+    // White Theme
+    // ============================================================================
 
-const WHITE_THEME = Object.freeze({
-    NAME: THEME_TYPES.WHITE,
+    const WHITE_THEME = Object.freeze({
+        NAME: THEME_TYPES.WHITE,
 
-    DISPLAY_NAME: 'White',
+        DISPLAY_NAME: 'White',
 
-    SEGMENT_ON: THEME_COLOURS.WHITE,
+        SEGMENT_ON: THEME_COLOURS.WHITE,
 
-    SEGMENT_OFF: THEME_COLOURS.GREY,
+        SEGMENT_OFF: THEME_COLOURS.GREY,
 
-    MODULE_BACKGROUND: THEME_COLOURS.BLACK,
+        MODULE_BACKGROUND: THEME_COLOURS.BLACK,
 
-    MODULE_BORDER: THEME_COLOURS.LIGHT_GREY,
+        MODULE_BORDER: THEME_COLOURS.LIGHT_GREY,
 
-    GLOW_COLOUR: THEME_COLOURS.WHITE,
+        GLOW_COLOUR: THEME_COLOURS.WHITE,
 
-    GLOW_STRENGTH: 0.35,
-});
+        GLOW_STRENGTH: 0.35,
+    });
 
-const DISPLAY_THEMES = Object.freeze({
-    AMBER: AMBER_THEME,
+    const DISPLAY_THEMES = Object.freeze({
+        AMBER: AMBER_THEME,
 
-    BLUE: BLUE_THEME,
+        BLUE: BLUE_THEME,
 
-    GREEN: GREEN_THEME,
+        GREEN: GREEN_THEME,
 
-    WHITE: WHITE_THEME,
-});
+        WHITE: WHITE_THEME,
+    });
 
-// ============================================================================
-//Deafult Theme
-// ============================================================================
+    // ============================================================================
+    //Deafult Theme
+    // ============================================================================
 
-const DEFAULT_THEME = DISPLAY_THEMES.GREEN;
+    const DEFAULT_THEME = DISPLAY_THEMES.GREEN;
+
+    Object.assign(C3G.Renderer, {
+        DISPLAY_THEMES,
+        DEFAULT_THEME,
+    });
+})();
