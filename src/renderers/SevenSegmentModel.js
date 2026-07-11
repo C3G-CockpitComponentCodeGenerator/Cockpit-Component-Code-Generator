@@ -90,14 +90,34 @@ function populateDisplayModel(model, displayText) {
 // ============================================================================
 
 function populateDigits(model, displayText) {
-    for (let i = 0; i < DISPLAY_DIGIT_COUNT; i++) {
-        const digit = model.digits[i];
+    let digitIndex = 0;
 
-        digit.character = displayText[i] ?? ' ';
+    for (let i = 0; i < displayText.length && digitIndex < DISPLAY_DIGIT_COUNT; i++) {
+        const ch = displayText[i];
 
-        digit.enabled = digit.character !== ' ';
+        // Decimal point belongs to the previous digit
+        if (ch === '.') {
+            if (digitIndex > 0) {
+                model.digits[digitIndex - 1].decimal = true;
+            }
+            continue;
+        }
 
+        const digit = model.digits[digitIndex];
+
+        digit.character = ch;
+        digit.enabled = ch !== ' ';
         digit.decimal = false;
+
+        digitIndex++;
+    }
+
+    // Clear remaining digits
+    while (digitIndex < DISPLAY_DIGIT_COUNT) {
+        model.digits[digitIndex].character = ' ';
+        model.digits[digitIndex].enabled = false;
+        model.digits[digitIndex].decimal = false;
+        digitIndex++;
     }
 }
 

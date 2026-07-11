@@ -59,9 +59,9 @@ const SEGMENT_GEOMETRY = Object.freeze({
 const DECIMAL_GEOMETRY = Object.freeze({
     RADIUS: 4,
 
-    X: 54,
+    X: 60,
 
-    Y: 94,
+    Y: 88,
 
     VISIBLE: true,
 });
