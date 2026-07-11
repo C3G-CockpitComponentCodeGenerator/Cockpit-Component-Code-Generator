@@ -1948,6 +1948,14 @@ function editDisplayConfig(index) {
     // STEP 2 - Restore General Settings
     // ------------------------------------------------------------
 
+    const brightnessSlider = document.getElementById('displayBrightness');
+    const brightnessValue = document.getElementById('brightnessValue');
+
+    brightnessSlider.oninput = () => {
+        brightnessValue.textContent = brightnessSlider.value;
+        renderDisplayPreview();
+    };
+
     document.getElementById('displayDigits').value = display.digits;
 
     document.getElementById('displayBrightness').value = display.brightness;
@@ -3153,6 +3161,8 @@ function renderDisplayPreview() {
     const selectedDecimal = document.querySelector('input[name="displayDecimal"]:checked');
 
     const decimalPhysicalDigit = selectedDecimal ? parseInt(selectedDecimal.value) : 0;
+    const brightness = parseInt(document.getElementById('displayBrightness').value);
+    //   model.brightness = brightness;
 
     // ------------------------------------------------------------
     // Test Value
@@ -3168,9 +3178,11 @@ function renderDisplayPreview() {
 
     preview = applySuppressLeadingZeros(preview);
 
+    document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview, brightness);
+
     //   document.getElementById('displayPreview').innerHTML = generateDisplaySVG_New(preview);
 
-    document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview);
+    // document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview);
 
     //  document.getElementById('displayPreview').textContent = preview;
     //  document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview);
@@ -3397,13 +3409,14 @@ function applySuppressLeadingZeros(preview) {
  */
 function generateDisplaySVG_New(preview) {
     const model = C3G.Renderer.createDisplayModel();
-
+    model.brightness = brightness;
+    console.log('Preview =', preview);
     C3G.Renderer.populateDisplayModel(model, preview);
 
     return C3G.Renderer.renderDisplay(model);
 }
 
-function generateDisplaySVG(preview) {
+/* function generateDisplaySVG(preview) {
     return `
         <svg
             width="100%"
@@ -3438,6 +3451,17 @@ ${generateDigitSVG(preview[8] ?? '', 390)}
 
         </svg>
     `;
+}*/
+
+function generateDisplaySVG(preview, brightness) {
+    const model = C3G.Renderer.createDisplayModel();
+    model.brightness = brightness;
+
+    model.theme = C3G.Renderer.DEFAULT_THEME;
+    console.log('Preview =', preview);
+    C3G.Renderer.populateDisplayModel(model, preview);
+
+    return C3G.Renderer.renderDisplay(model);
 }
 
 /**

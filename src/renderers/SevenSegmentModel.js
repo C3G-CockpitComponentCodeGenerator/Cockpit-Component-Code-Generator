@@ -85,6 +85,14 @@
 
         populateDigits(model, displayText);
 
+        console.table(
+            model.digits.map((d, i) => ({
+                digit: i,
+                char: d.character,
+                decimal: d.decimal,
+            }))
+        );
+
         return model;
     }
 
@@ -95,7 +103,9 @@
     function populateDigits(model, displayText) {
         let digitIndex = 0;
 
-        for (let i = 0; i < displayText.length && digitIndex < DISPLAY_DIGIT_COUNT; i++) {
+        //  for (let i = 0; i < displayText.length && digitIndex < DISPLAY_DIGIT_COUNT; i++) {
+
+        for (let i = 0; i < displayText.length; i++) {
             const ch = displayText[i];
 
             // Decimal point belongs to the previous digit
@@ -103,6 +113,17 @@
                 if (digitIndex > 0) {
                     model.digits[digitIndex - 1].decimal = true;
                 }
+                continue;
+            }
+
+            /*  const digit = model.digits[digitIndex];
+
+            digit.character = ch;
+            digit.enabled = ch !== ' ';
+            digit.decimal = false;
+
+            digitIndex++; */
+            if (digitIndex >= DISPLAY_DIGIT_COUNT) {
                 continue;
             }
 

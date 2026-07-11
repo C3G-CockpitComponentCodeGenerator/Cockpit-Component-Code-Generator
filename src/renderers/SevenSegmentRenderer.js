@@ -118,24 +118,45 @@
         </g>
     `;
     }
+    // ============================================================================
+    // Brightness
+    // ============================================================================
+
+    function adjustBrightness(hex, brightness) {
+        // MAX7219 brightness is 0-15
+        const factor = Math.max(0, Math.min(15, brightness)) / 15;
+
+        const r = Math.round(parseInt(hex.slice(1, 3), 16) * factor);
+        const g = Math.round(parseInt(hex.slice(3, 5), 16) * factor);
+        const b = Math.round(parseInt(hex.slice(5, 7), 16) * factor);
+
+        return `rgb(${r}, ${g}, ${b})`;
+    }
 
     // ============================================================================
     // Display Renderer
     // ============================================================================
 
     function renderDisplay(displayModel) {
+        const theme = {
+            ...displayModel.theme,
+        };
+
+        theme.SEGMENT_ON = adjustBrightness(theme.SEGMENT_ON, displayModel.brightness);
+
         let svg = '';
 
         for (let i = 0; i < displayModel.digits.length; i++) {
-            svg += renderDigit(
+            /*  svg += renderDigit(
                 displayModel.digits[i],
                 i * (DIGIT_GEOMETRY.WIDTH + DIGIT_GEOMETRY.SPACING),
                 displayModel.theme
-            );
+            );*/
+            svg += renderDigit(displayModel.digits[i], i * (DIGIT_GEOMETRY.WIDTH + DIGIT_GEOMETRY.SPACING), theme);
         }
 
         const width =
-            displayModel.digits.length * (DIGIT_GEOMETRY.WIDTH + DIGIT_GEOMETRY.SPACING) + DIGIT_GEOMETRY.SPACING;
+            displayModel.digits.length * (DIGIT_GEOMETRY.WIDTH + DIGIT_GEOMETRY.SPACING) + DIGIT_GEOMETRY.SPACING + 10;
 
         return `
         <svg
