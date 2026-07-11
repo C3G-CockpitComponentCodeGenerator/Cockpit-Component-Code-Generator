@@ -1951,6 +1951,10 @@ function editDisplayConfig(index) {
     const brightnessSlider = document.getElementById('displayBrightness');
     const brightnessValue = document.getElementById('brightnessValue');
 
+    document.querySelectorAll('input[name="displayTheme"]').forEach((radio) => {
+        radio.onchange = renderDisplayPreview;
+    });
+
     brightnessSlider.oninput = () => {
         brightnessValue.textContent = brightnessSlider.value;
         renderDisplayPreview();
@@ -3162,6 +3166,7 @@ function renderDisplayPreview() {
 
     const decimalPhysicalDigit = selectedDecimal ? parseInt(selectedDecimal.value) : 0;
     const brightness = parseInt(document.getElementById('displayBrightness').value);
+    const selectedTheme = document.querySelector('input[name="displayTheme"]:checked').value;
     //   model.brightness = brightness;
 
     // ------------------------------------------------------------
@@ -3178,7 +3183,7 @@ function renderDisplayPreview() {
 
     preview = applySuppressLeadingZeros(preview);
 
-    document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview, brightness);
+    document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview, brightness, selectedTheme);
 
     //   document.getElementById('displayPreview').innerHTML = generateDisplaySVG_New(preview);
 
@@ -3453,11 +3458,18 @@ ${generateDigitSVG(preview[8] ?? '', 390)}
     `;
 }*/
 
-function generateDisplaySVG(preview, brightness) {
+function generateDisplaySVG(preview, brightness, selectedTheme) {
     const model = C3G.Renderer.createDisplayModel();
     model.brightness = brightness;
 
-    model.theme = C3G.Renderer.DEFAULT_THEME;
+    // model.theme = C3G.Renderer.DEFAULT_THEME;
+
+    console.log('Theme =', selectedTheme);
+    console.log(C3G.Renderer.DISPLAY_THEMES);
+
+    // model.theme = C3G.Renderer.DISPLAY_THEMES[selectedTheme] ?? C3G.Renderer.DEFAULT_THEME;
+    model.theme = C3G.Renderer.DISPLAY_THEMES[selectedTheme.toUpperCase()] ?? C3G.Renderer.DEFAULT_THEME;
+
     console.log('Preview =', preview);
     C3G.Renderer.populateDisplayModel(model, preview);
 

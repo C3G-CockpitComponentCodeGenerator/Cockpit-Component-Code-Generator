@@ -39,6 +39,8 @@
         GREEN: 'GREEN',
 
         WHITE: 'WHITE',
+
+        RED: 'RED',
     });
 
     // ============================================================================
@@ -151,6 +153,23 @@
         GLOW_STRENGTH: 0.35,
     });
 
+    // ============================================================================
+    // Red Theme
+    // ============================================================================
+    const RED_THEME = Object.freeze({
+        NAME: THEME_TYPES.RED,
+        DISPLAY_NAME: 'Red',
+
+        SEGMENT_ON: '#FF4040',
+        SEGMENT_OFF: THEME_COLOURS.GREY,
+
+        MODULE_BACKGROUND: THEME_COLOURS.BLACK,
+        MODULE_BORDER: THEME_COLOURS.LIGHT_GREY,
+
+        GLOW_COLOUR: '#FF4040',
+        GLOW_STRENGTH: 0.35,
+    });
+
     const DISPLAY_THEMES = Object.freeze({
         AMBER: AMBER_THEME,
 
@@ -159,6 +178,8 @@
         GREEN: GREEN_THEME,
 
         WHITE: WHITE_THEME,
+
+        RED: RED_THEME,
     });
 
     // ============================================================================
