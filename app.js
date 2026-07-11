@@ -3168,8 +3168,12 @@ function renderDisplayPreview() {
 
     preview = applySuppressLeadingZeros(preview);
 
-    //  document.getElementById('displayPreview').textContent = preview;
+    //   document.getElementById('displayPreview').innerHTML = generateDisplaySVG_New(preview);
+
     document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview);
+
+    //  document.getElementById('displayPreview').textContent = preview;
+    //  document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview);
     // ------------------------------------------------------------
     // Temporary - New Renderer Test
     // ------------------------------------------------------------
@@ -3391,6 +3395,14 @@ function applySuppressLeadingZeros(preview) {
  * Initial SVG Renderer
  * =====================================================================
  */
+function generateDisplaySVG_New(preview) {
+    const model = C3G.Renderer.createDisplayModel();
+
+    C3G.Renderer.populateDisplayModel(model, preview);
+
+    return C3G.Renderer.renderDisplay(model);
+}
+
 function generateDisplaySVG(preview) {
     return `
         <svg

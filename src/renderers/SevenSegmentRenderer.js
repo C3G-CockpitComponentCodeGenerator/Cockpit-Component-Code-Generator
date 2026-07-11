@@ -156,3 +156,15 @@ function renderDisplay(displayModel) {
         </svg>
     `;
 }
+
+// ============================================================================
+// Public API
+// ============================================================================
+
+window.C3G = window.C3G || {};
+
+window.C3G.Renderer = Object.freeze({
+    createDisplayModel,
+    populateDisplayModel,
+    renderDisplay,
+});
