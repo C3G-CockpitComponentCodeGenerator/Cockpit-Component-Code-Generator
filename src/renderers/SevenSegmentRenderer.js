@@ -14,6 +14,36 @@
  ******************************************************************************/
 
 // ============================================================================
+// Character Segment Map
+// ============================================================================
+
+const SEGMENT_MAP = Object.freeze({
+    0: ['A', 'B', 'C', 'D', 'E', 'F'],
+
+    1: ['B', 'C'],
+
+    2: ['A', 'B', 'G', 'E', 'D'],
+
+    3: ['A', 'B', 'C', 'D', 'G'],
+
+    4: ['F', 'G', 'B', 'C'],
+
+    5: ['A', 'F', 'G', 'C', 'D'],
+
+    6: ['A', 'F', 'G', 'E', 'C', 'D'],
+
+    7: ['A', 'B', 'C'],
+
+    8: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+
+    9: ['A', 'B', 'C', 'D', 'F', 'G'],
+
+    '-': ['G'],
+
+    ' ': [],
+});
+
+// ============================================================================
 // SVG Helpers
 // ============================================================================
 
@@ -41,19 +71,20 @@ function svgCircle(cx, cy, radius, fill) {
 // Segment Renderer
 // ============================================================================
 
-function renderSegment(segmentDefinition, active, theme) {
+function renderSegment(segmentName, segmentDefinition, active, theme) {
     const fill = active ? theme.SEGMENT_ON : theme.SEGMENT_OFF;
 
-    const path =
-        segmentDefinition.TYPE === SEGMENT_TYPES.HORIZONTAL ? SEGMENT_PATHS.HORIZONTAL : SEGMENT_PATHS.VERTICAL;
-
-    return `
+    // const path =
+    //    segmentDefinition.TYPE === SEGMENT_TYPES.HORIZONTAL ? SEGMENT_PATHS.HORIZONTAL : SEGMENT_PATHS.VERTICAL;
+    const path = SEGMENT_POINTS[segmentName];
+    /*  return `
         <g transform="translate(${segmentDefinition.X},${segmentDefinition.Y})">
 
             ${svgPolygon(path, fill)}
 
         </g>
-    `;
+    `; */
+    return svgPolygon(path, fill);
 }
 
 // ============================================================================
@@ -66,7 +97,7 @@ function renderDigit(digitModel, x, theme) {
     let svg = '';
 
     for (const [segmentName, segmentDefinition] of Object.entries(SEGMENT_DEFINITIONS)) {
-        svg += renderSegment(segmentDefinition, activeSegments.includes(segmentName), theme);
+        svg += renderSegment(segmentName, segmentDefinition, activeSegments.includes(segmentName), theme);
     }
 
     // Decimal Point

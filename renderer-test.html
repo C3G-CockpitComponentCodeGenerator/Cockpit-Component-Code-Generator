@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>C3G Renderer Test</title>
+
+        <style>
+            body {
+                margin: 40px;
+                background: #202020;
+                color: white;
+                font-family: Arial, sans-serif;
+            }
+
+            h1 {
+                margin-bottom: 20px;
+            }
+
+            #renderer {
+                border: 1px solid #555;
+                padding: 20px;
+                display: inline-block;
+                background: #111;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>C3G Seven Segment Renderer Test</h1>
+
+        <div id="renderer"></div>
+
+        <script src="src/renderers/SevenSegmentGeometry.js"></script>
+        <script src="src/renderers/SevenSegmentThemes.js"></script>
+        <script src="src/renderers/SevenSegmentModel.js"></script>
+        <script src="src/renderers/SevenSegmentRenderer.js"></script>
+
+        <script>
+            const model = createDisplayModel();
+
+            populateDisplayModel(model, '12345678');
+
+            // document.getElementById('renderer').innerHTML = renderDisplay(model);
+
+            const svg = renderDisplay(model);
+
+            console.log(svg);
+
+            document.getElementById('renderer').innerHTML = svg;
+        </script>
+    </body>
+</html>

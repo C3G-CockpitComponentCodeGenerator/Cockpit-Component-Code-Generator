@@ -85,6 +85,22 @@ function populateDisplayModel(model, displayText) {
     return model;
 }
 
+// ============================================================================
+// Populate Digit Models
+// ============================================================================
+
+function populateDigits(model, displayText) {
+    for (let i = 0; i < DISPLAY_DIGIT_COUNT; i++) {
+        const digit = model.digits[i];
+
+        digit.character = displayText[i] ?? ' ';
+
+        digit.enabled = digit.character !== ' ';
+
+        digit.decimal = false;
+    }
+}
+
 function normalizeDisplayText(displayText) {
     return String(displayText);
 }

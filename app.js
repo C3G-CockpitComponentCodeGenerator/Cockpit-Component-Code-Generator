@@ -3170,6 +3170,15 @@ function renderDisplayPreview() {
 
     //  document.getElementById('displayPreview').textContent = preview;
     document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview);
+    // ------------------------------------------------------------
+    // Temporary - New Renderer Test
+    // ------------------------------------------------------------
+
+    //  const model = createDisplayModel();
+
+    //  populateDisplayModel(model, preview);
+
+    //  document.getElementById('displayPreview').innerHTML = renderDisplay(model);
 }
 
 /**

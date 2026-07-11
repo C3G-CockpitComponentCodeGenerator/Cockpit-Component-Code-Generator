@@ -164,4 +164,4 @@ const DISPLAY_THEMES = Object.freeze({
 //Deafult Theme
 // ============================================================================
 
-const DEFAULT_THEME = DISPLAY_THEMES.AMBER;
+const DEFAULT_THEME = DISPLAY_THEMES.GREEN;
