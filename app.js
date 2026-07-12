@@ -519,10 +519,6 @@ function addOrUpdateComponent() {
         return;
     }
 
-    /*  const component = buildComponent(type);
-
-    if (!component) return; */
-
     const definition = COMPONENT_TYPES[component.type];
 
     const assigningToMCP = component.assignedDevice !== 'BOARD';
@@ -810,8 +806,13 @@ for each position.`
             }
             component.displays = JSON.parse(JSON.stringify(displayConfigs));
 
-            if (project.allocationMode === 'MANUAL') {
+            /*    if (project.allocationMode === 'MANUAL') {
                 component.manualPin = parseInt(document.getElementById('manualPin').value);
+            }*/
+            if (project.allocationMode === 'MANUAL') {
+                component.manualDIN = getManualPinValue('manualSegmentDIN');
+                component.manualCLK = getManualPinValue('manualSegmentCLK');
+                component.manualCS = getManualPinValue('manualSegmentCS');
             }
             break;
 
@@ -820,8 +821,10 @@ for each position.`
             break;
     }
 
+    //   console.log(component);
+    // console.log('Component Object');
     console.log(component);
-
+    // console.dir(component);
     return component;
 }
 
@@ -913,22 +916,6 @@ function editComponent(index) {
 
     if (c.ledType) document.getElementById('ledType').value = c.ledType;
 
-    /*    if (c.type === 'sevensegment') {
-        document.getElementById('segmentModules').value = c.modules || 1;
-        updateModuleNameFields();
-
-        if (c.displays) {
-            displayConfigs = JSON.parse(JSON.stringify(c.displays));
-
-            c.displays.forEach((display, index) => {
-                const field = document.getElementById(`moduleName${index + 1}`);
-
-                if (field) {
-                    field.value = display.name;
-                }
-            });
-        }
-    } */
     if (c.type === 'sevensegment') {
         updateComponentOptions();
 
@@ -937,6 +924,20 @@ function editComponent(index) {
         displayConfigs = JSON.parse(JSON.stringify(c.displays || []));
 
         updateModuleNameFields();
+
+        if (c.manualDIN !== undefined) {
+            document.getElementById('manualSegmentDIN').value = c.manualDIN;
+        }
+
+        if (c.manualCLK !== undefined) {
+            document.getElementById('manualSegmentCLK').value = c.manualCLK;
+        }
+
+        if (c.manualCS !== undefined) {
+            document.getElementById('manualSegmentCS').value = c.manualCS;
+        }
+
+        updateTriplePinDropdowns('manualSegmentDIN', 'manualSegmentCLK', 'manualSegmentCS');
 
         if (typeof renderDisplayLayout === 'function') {
             renderDisplayLayout();
@@ -1097,7 +1098,7 @@ function refreshUI() {
     renderNativePinMap();
     renderMCPPinMaps();
 
-    console.log('Allocation Mode:', project.allocationMode);
+    //   console.log('Allocation Mode:', project.allocationMode);
 }
 // =====================================
 // Components Table
@@ -1565,7 +1566,7 @@ function updateExpansionAdvisor() {
 
     const expansionUsed = resources.expansionGPIOUsed;
 
-    console.log(resources);
+    //  console.log(resources);
 
     const availableGPIO = getTotalGPIOCapacity();
 
@@ -2377,7 +2378,7 @@ function populateAssignedDeviceDropdown() {
 }
 
 function populateManualPinDropdown() {
-    console.log('populateManualPinDropdown() called');
+    //    console.log('populateManualPinDropdown() called');
     const pinSelect = document.getElementById('manualPin');
     const segmentDIN = document.getElementById('manualSegmentDIN');
     const segmentCLK = document.getElementById('manualSegmentCLK');
@@ -2482,7 +2483,7 @@ function populateManualPinDropdown() {
 }
 
 function renderNativePinMap() {
-    console.log('Pin map rendering...');
+    //    console.log('Pin map rendering...');
     const container = document.getElementById('nativePinMap');
 
     if (!container) return;
@@ -2497,7 +2498,7 @@ function renderNativePinMap() {
 
     const usedPins = allocation.reservedPins || [];
 
-    console.log(usedPins);
+    //   console.log(usedPins);
 
     const title = document.createElement('h4');
 

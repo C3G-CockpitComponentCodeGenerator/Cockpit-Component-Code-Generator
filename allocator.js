@@ -6,9 +6,6 @@ function allocatePins(project) {
     const allocations = [];
 
     const errors = [];
-    // const device = getAssignedExpansionDevice(component);
-
-    //  console.log(device);
 
     expansionManager.resetAllocations();
 
@@ -65,7 +62,7 @@ function allocatePins(project) {
     const hasSPI = project.components.some((c) => c.type === 'sevensegment');
 
     if (hasSPI) {
-        reservePin(board.spi.miso);
+        //  reservePin(board.spi.miso);
         reservePin(board.spi.mosi);
         reservePin(board.spi.sck);
     }
@@ -149,7 +146,6 @@ function allocatePins(project) {
         const useMCP = String(encoder.assignedDevice || '').startsWith('MCP');
 
         if (project.allocationMode === 'MANUAL') {
-            //    const useMCP = String(encoder.assignedDevice || '').startsWith('MCP');
             const pinA = encoder.manualPinA;
 
             const pinB = encoder.manualPinB;
@@ -297,18 +293,60 @@ function allocatePins(project) {
         // SPI devices
 
         if (component.type === 'sevensegment') {
+            let dinPin;
+            let clkPin;
             let csPin;
 
             if (project.allocationMode === 'MANUAL') {
-                csPin = component.manualPin;
+                dinPin = component.manualDIN;
+                clkPin = component.manualCLK;
+                csPin = component.manualCS;
 
-                if (isReserved(csPin)) {
+                if (isReserved(dinPin) || isReserved(clkPin) || isReserved(csPin)) {
                     errors.push({
                         component,
-
-                        reason: 'CS Pin Already Used',
+                        reason: 'SPI Pin Already Used',
                     });
 
+                    return {
+                        valid: false,
+                        errors,
+                    };
+                }
+            } else {
+                dinPin = board.spi.mosi;
+                clkPin = board.spi.sck;
+
+                csPin = board.displayCSPins?.find((pin) => getFreeGPIO().includes(pin));
+
+                if (csPin === undefined) {
+                    csPin = getFreeGPIO()[0];
+                }
+            }
+
+            reservePin(dinPin);
+            reservePin(clkPin);
+            reservePin(csPin);
+
+            allocations.push({
+                component,
+                pins: [`DIN:${dinPin}`, `CLK:${clkPin}`, `CS:${csPin}`, `Modules:${component.modules || 1}`],
+            });
+
+            continue;
+        }
+
+        /*  if (component.type === 'sevensegment') {
+            let csPin;
+
+            if (project.allocationMode === 'MANUAL') {
+                //    csPin = component.manualPin;
+
+                const dinPin = component.manualDIN;
+                const clkPin = component.manualCLK;
+                const csPin = component.manualCS;
+
+                if (isReserved(dinPin) || isReserved(clkPin) || isReserved(csPin)) {
                     return {
                         valid: false,
                         errors,
@@ -322,20 +360,18 @@ function allocatePins(project) {
                 }
             }
 
+            // reservePin(csPin);
+            reservePin(dinPin);
+            reservePin(clkPin);
             reservePin(csPin);
 
             allocations.push({
                 component,
 
-                pins: [
-                    `DIN:${board.spi.mosi}`,
-                    `CLK:${board.spi.sck}`,
-                    `CS:${csPin}`,
-                    `Modules:${component.modules || 1}`,
-                ],
+                pins: [`DIN:${dinPin}`, `CLK:${clkPin}`, `CS:${csPin}`, `Modules:${component.modules || 1}`],
             });
             continue;
-        }
+        } */
 
         // I2C Displays
 
@@ -589,7 +625,7 @@ function allocatePins(project) {
                     mcpAddress = mcpAllocation?.device.address;
                 }
             }
-            // assigned.push(useMCP ? `${mcpAllocation.device.address}:${pin}` : `BOARD:${pin}`);
+
             assigned.push(useMCP ? `${mcpAddress}:${pin}` : `BOARD:${pin}`);
         }
 
@@ -615,7 +651,7 @@ function allocatePins(project) {
 
 function validateProject(project) {
     const result = allocatePins(project);
-
+    console.log(result);
     return result.valid;
 }
 
@@ -625,6 +661,7 @@ function validateProject(project) {
 
 function buildAllocationRows(project) {
     const result = allocatePins(project);
+    console.log(result);
 
     console.log(result.allocations);
 
