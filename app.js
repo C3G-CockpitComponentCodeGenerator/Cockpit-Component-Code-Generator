@@ -149,6 +149,21 @@ function updateComponentOptions() {
             c.manualPins.forEach((pin) => {
                 usedPins.push(`${c.assignedDevice}:${pin}`);
             });
+        }
+        // Seven Segment SPI pins
+        if (c.type === 'sevensegment') {
+            if (c.manualDIN !== undefined && c.manualDIN !== null) {
+                usedPins.push(`${c.assignedDevice}:${c.manualDIN}`);
+            }
+
+            if (c.manualCLK !== undefined && c.manualCLK !== null) {
+                usedPins.push(`${c.assignedDevice}:${c.manualCLK}`);
+            }
+
+            if (c.manualCS !== undefined && c.manualCS !== null) {
+                usedPins.push(`${c.assignedDevice}:${c.manualCS}`);
+            }
+
             console.log('USED PINS', usedPins);
         }
     });
@@ -187,7 +202,11 @@ function updateComponentOptions() {
             availablePins.forEach((pin) => {
                 const pinKey = `${selectedDevice}:${pin}`;
 
+                /*   if (usedPins.includes(pinKey)) {
+                    return;
+                } */
                 if (usedPins.includes(pinKey)) {
+                    console.log('HIDING:', pinKey);
                     return;
                 }
 
@@ -247,15 +266,20 @@ function updateComponentOptions() {
                 availablePins = mcp.pins.filter((pin) => !mcp.usedPins.includes(pin));
             }
         }
-        //  console.log('AVAILABLE PINS:', availablePins);
-        availablePins.forEach((pin) => {
-            // console.log('USED PINS', usedPins);
-            // console.log('AVAILABLE PINS', availablePins);
 
+        /*   availablePins.forEach((pin) => {
             if (usedPins.includes(pin)) {
                 return;
 
                 console.log('ENCODER Selected Device:', selectedDevice);
+            } */
+        // changed
+
+        availablePins.forEach((pin) => {
+            const pinKey = `${selectedDevice}:${pin}`;
+
+            if (usedPins.includes(pinKey)) {
+                return;
             }
 
             const optionA = document.createElement('option');
@@ -281,8 +305,15 @@ function updateComponentOptions() {
             togglePinA.innerHTML = '';
             togglePinB.innerHTML = '';
 
-            availablePins.forEach((pin) => {
+            /*    availablePins.forEach((pin) => {
                 if (usedPins.includes(pin)) {
+                    return;
+                } */
+
+            availablePins.forEach((pin) => {
+                const pinKey = `${selectedDevice}:${pin}`;
+
+                if (usedPins.includes(pinKey)) {
                     return;
                 }
 
@@ -2421,6 +2452,21 @@ function populateManualPinDropdown() {
                 usedPins.push(`${c.assignedDevice}:${pin}`);
             });
         }
+
+        // Seven Segment SPI pins
+        if (c.type === 'sevensegment') {
+            if (c.manualDIN !== undefined && c.manualDIN !== null) {
+                usedPins.push(`${c.assignedDevice}:${c.manualDIN}`);
+            }
+
+            if (c.manualCLK !== undefined && c.manualCLK !== null) {
+                usedPins.push(`${c.assignedDevice}:${c.manualCLK}`);
+            }
+
+            if (c.manualCS !== undefined && c.manualCS !== null) {
+                usedPins.push(`${c.assignedDevice}:${c.manualCS}`);
+            }
+        }
     });
 
     let availablePins = [];
@@ -2444,12 +2490,6 @@ function populateManualPinDropdown() {
             return;
         }
 
-        /*     const option = document.createElement('option');
-
-        option.value = pin;
-        option.textContent = pin;
-
-        pinSelect.appendChild(option); */
         // Existing single GPIO dropdown
         if (pinSelect) {
             const option = document.createElement('option');

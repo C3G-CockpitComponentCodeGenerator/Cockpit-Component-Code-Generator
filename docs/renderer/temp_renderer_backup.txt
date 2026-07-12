@@ -47,3 +47,7 @@ const SEGMENT_MAP = {
 - [ ] Public API
 - [ ] Integration
 - [ ] Legacy Removal
+
+
+if (!useMCP) {
+                reservePin(pin);

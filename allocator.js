@@ -61,8 +61,7 @@ function allocatePins(project) {
 
     const hasSPI = project.components.some((c) => c.type === 'sevensegment');
 
-    if (hasSPI) {
-        //  reservePin(board.spi.miso);
+    if (hasSPI && project.allocationMode === 'AUTO') {
         reservePin(board.spi.mosi);
         reservePin(board.spi.sck);
     }
