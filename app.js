@@ -464,6 +464,7 @@ function updateComponentOptions() {
     if (builderPins) {
         builderPins.innerText = pinsRequired;
     }
+    populateManualPinDropdown();
 }
 
 function hideAllOptions() {
@@ -1804,21 +1805,55 @@ function updateDualPinDropdowns(selectAId, selectBId) {
     }
 }
 
-/*function updateRotaryPinDropdowns() {
-    // const selects = document.querySelectorAll('[id^="manualRotaryPin"]');
-    const selects = document.querySelectorAll('select[id^="manualRotaryPin"]');
-    const selectedPins = Array.from(selects).map((s) => s.value);
+function updateTriplePinDropdowns(dinId, clkId, csId) {
+    const din = document.getElementById(dinId);
+    const clk = document.getElementById(clkId);
+    const cs = document.getElementById(csId);
 
-    selects.forEach((select) => {
-        Array.from(select.options).forEach((option) => {
-            option.hidden = false;
+    if (!din || !clk || !cs) {
+        return;
+    }
 
-            if (option.value !== select.value && selectedPins.includes(option.value)) {
-                option.hidden = true;
-            }
-        });
+    const selectedDIN = din.value;
+    const selectedCLK = clk.value;
+    const selectedCS = cs.value;
+
+    Array.from(din.options).forEach((option) => {
+        option.hidden = option.value === selectedCLK || option.value === selectedCS;
     });
-}*/
+
+    Array.from(clk.options).forEach((option) => {
+        option.hidden = option.value === selectedDIN || option.value === selectedCS;
+    });
+
+    Array.from(cs.options).forEach((option) => {
+        option.hidden = option.value === selectedDIN || option.value === selectedCLK;
+    });
+
+    if (din.value === selectedCLK || din.value === selectedCS) {
+        const firstVisible = Array.from(din.options).find((o) => !o.hidden);
+
+        if (firstVisible) {
+            din.value = firstVisible.value;
+        }
+    }
+
+    if (clk.value === selectedDIN || clk.value === selectedCS) {
+        const firstVisible = Array.from(clk.options).find((o) => !o.hidden);
+
+        if (firstVisible) {
+            clk.value = firstVisible.value;
+        }
+    }
+
+    if (cs.value === selectedDIN || cs.value === selectedCLK) {
+        const firstVisible = Array.from(cs.options).find((o) => !o.hidden);
+
+        if (firstVisible) {
+            cs.value = firstVisible.value;
+        }
+    }
+}
 
 function updateRotaryPinDropdowns() {
     const selects = document.querySelectorAll('select[id^="manualRotaryPin"]');
@@ -2342,13 +2377,22 @@ function populateAssignedDeviceDropdown() {
 }
 
 function populateManualPinDropdown() {
+    console.log('populateManualPinDropdown() called');
     const pinSelect = document.getElementById('manualPin');
+    const segmentDIN = document.getElementById('manualSegmentDIN');
+    const segmentCLK = document.getElementById('manualSegmentCLK');
+    const segmentCS = document.getElementById('manualSegmentCS');
 
     if (!pinSelect) {
         return;
     }
 
-    pinSelect.innerHTML = '';
+    // pinSelect.innerHTML = '';
+    if (pinSelect) pinSelect.innerHTML = '';
+
+    if (segmentDIN) segmentDIN.innerHTML = '';
+    if (segmentCLK) segmentCLK.innerHTML = '';
+    if (segmentCS) segmentCS.innerHTML = '';
 
     const selectedDevice = document.getElementById('manualAssignedDevice').value;
 
@@ -2399,12 +2443,41 @@ function populateManualPinDropdown() {
             return;
         }
 
-        const option = document.createElement('option');
+        /*     const option = document.createElement('option');
 
         option.value = pin;
         option.textContent = pin;
 
-        pinSelect.appendChild(option);
+        pinSelect.appendChild(option); */
+        // Existing single GPIO dropdown
+        if (pinSelect) {
+            const option = document.createElement('option');
+            option.value = pin;
+            option.textContent = pin;
+            pinSelect.appendChild(option);
+        }
+
+        // New Seven Segment dropdowns
+        if (segmentDIN) {
+            const option = document.createElement('option');
+            option.value = pin;
+            option.textContent = pin;
+            segmentDIN.appendChild(option);
+        }
+
+        if (segmentCLK) {
+            const option = document.createElement('option');
+            option.value = pin;
+            option.textContent = pin;
+            segmentCLK.appendChild(option);
+        }
+
+        if (segmentCS) {
+            const option = document.createElement('option');
+            option.value = pin;
+            option.textContent = pin;
+            segmentCS.appendChild(option);
+        }
     });
 }
 

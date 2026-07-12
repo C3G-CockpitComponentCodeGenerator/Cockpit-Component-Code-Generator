@@ -175,13 +175,25 @@
                     </div>
 <div id="manualSevenSegmentPinOptions" class="form-group" style="display: none">
     <label>DIN Pin</label>
-    <select id="manualSegmentDIN"></select>
+<!--    <select id="manualSegmentDIN"></select> -->
+    <select
+    id="manualSegmentDIN"
+    onchange="updateTriplePinDropdowns('manualSegmentDIN','manualSegmentCLK','manualSegmentCS')">
+</select>
 
     <label>CLK Pin</label>
-    <select id="manualSegmentCLK"></select>
+<!--     <select id="manualSegmentCLK"></select> -->
+     <select
+    id="manualSegmentCLK"
+    onchange="updateTriplePinDropdowns('manualSegmentDIN','manualSegmentCLK','manualSegmentCS')">
+</select>
 
     <label>CS Pin</label>
-    <select id="manualSegmentCS"></select>
+<!--     <select id="manualSegmentCS"></select> -->
+     <select
+    id="manualSegmentCS"
+    onchange="updateTriplePinDropdowns('manualSegmentDIN','manualSegmentCLK','manualSegmentCS')">
+</select>
 </div>
                     <div id="manualAxisPinOptions" class="form-group" style="display: none">
                         <label>Analog Pin</label>
