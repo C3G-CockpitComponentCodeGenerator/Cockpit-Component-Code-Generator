@@ -173,7 +173,16 @@
                         <label id="manualPinLabel">GPIO Pin</label>
                         <select id="manualPin"></select>
                     </div>
+<div id="manualSevenSegmentPinOptions" class="form-group" style="display: none">
+    <label>DIN Pin</label>
+    <select id="manualSegmentDIN"></select>
 
+    <label>CLK Pin</label>
+    <select id="manualSegmentCLK"></select>
+
+    <label>CS Pin</label>
+    <select id="manualSegmentCS"></select>
+</div>
                     <div id="manualAxisPinOptions" class="form-group" style="display: none">
                         <label>Analog Pin</label>
                         <select id="manualAxisPin"></select>
@@ -494,39 +503,7 @@ UP</textarea
             </div>
         </div>
 
-        <!-- Pin Allocation -->
-
-        <!-- <div class="workspace-panel">
-
-    <div class="table-header">
-        <h2>Pin Allocation</h2>
-    </div>
-
-    <div class="table-wrapper">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Component</th>
-                    <th>Type</th>
-                    <th>Assigned Pins</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="allocationTableBody">
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div> -->
+      
         <!-- Generation & Output -->
 
         <div class="workspace-panel">

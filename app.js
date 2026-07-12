@@ -308,15 +308,11 @@ function updateComponentOptions() {
             updateDualPinDropdowns('manualTogglePinA', 'manualTogglePinB');
         }
 
-        //  updateDualPinDropdowns('manualEncoderPinA', 'manualEncoderPinB');
-
         if (encoderPinA.options.length > 1 && encoderPinA.value === encoderPinB.value) {
             encoderPinB.selectedIndex = 1;
         }
 
         updateDualPinDropdowns('manualEncoderPinA', 'manualEncoderPinB');
-
-        //  console.log('A', encoderPinA.value, 'B', encoderPinB.value);
     }
 
     const usedAxisPins = project.components
@@ -348,6 +344,7 @@ function updateComponentOptions() {
         type !== 'axis' &&
         type !== 'encoder' &&
         type !== 'rotaryswitch' &&
+        type !== 'sevensegment' &&
         !(type === 'toggle' && parseInt(document.getElementById('togglePositions').value) === 3)
             ? 'block'
             : 'none';
@@ -373,12 +370,15 @@ function updateComponentOptions() {
     const rotaryPinOptions = document.getElementById('manualRotaryPinOptions');
     const deviceOptions = document.getElementById('manualDeviceOptions');
 
+    const sevenSegmentPinOptions = document.getElementById('manualSevenSegmentPinOptions');
+
+    sevenSegmentPinOptions.style.display =
+        project.allocationMode === 'MANUAL' && type === 'sevensegment' ? 'block' : 'none';
+
     deviceOptions.style.display =
         project.allocationMode === 'MANUAL' && ['pushbutton', 'toggle', 'encoder', 'rotaryswitch', 'led'].includes(type)
             ? 'block'
             : 'none';
-
-    // console.log('DEVICE OPTIONS', type, deviceOptions.style.display);
 
     rotaryPinOptions.style.display = project.allocationMode === 'MANUAL' && type === 'rotaryswitch' ? 'block' : 'none';
 
@@ -447,13 +447,18 @@ function updateComponentOptions() {
             break;
     }
 
-    const manualPinLabel = document.getElementById('manualPinLabel');
+    /*   const manualPinLabel = document.getElementById('manualPinLabel');
 
     if (manualPinLabel) {
         manualPinLabel.textContent = type === 'sevensegment' ? 'CS Pin' : 'GPIO Pin';
+    } */
+
+    const manualPinLabel = document.getElementById('manualPinLabel');
+
+    if (manualPinLabel) {
+        manualPinLabel.textContent = 'GPIO Pin';
     }
 
-    //   document.getElementById('pinsRequired').innerText = pinsRequired;
     const builderPins = document.getElementById('builderPins');
 
     if (builderPins) {
@@ -1934,7 +1939,7 @@ function updateModuleNameFields() {
  * =====================================================================
  */
 function editDisplayConfig(index) {
-    console.log('EDIT CLICKED', index);
+    // console.log('EDIT CLICKED', index);
 
     // ------------------------------------------------------------
     // STEP 1 - Select Display
