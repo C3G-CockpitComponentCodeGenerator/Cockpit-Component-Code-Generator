@@ -240,7 +240,7 @@ if(
     bool decimal = false;
 
     int displayDigit =
-        totalDigits - digitPos;
+        logicalDigit + 1;
 
     if(
         displayDigit ==
