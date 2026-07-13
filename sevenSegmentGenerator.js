@@ -141,7 +141,7 @@ function generateSevenSegmentSetup(firmwareModel) {
 
     const lines = [];
 
-    Object.values(displayGroups).forEach((group, chainIndex) => {
+    /*  Object.values(displayGroups).forEach((group, chainIndex) => {
         const brightness = group[0].brightness ?? 8;
 
         lines.push(
@@ -152,6 +152,17 @@ function generateSevenSegmentSetup(firmwareModel) {
     seg${chainIndex + 1}.clearDisplay(i);
 }`
         );
+    }); */
+    Object.values(displayGroups).forEach((group, chainIndex) => {
+        group.forEach((display, moduleIndex) => {
+            const brightness = display.brightness ?? 8;
+
+            lines.push(
+                `seg${chainIndex + 1}.shutdown(${moduleIndex},false);
+seg${chainIndex + 1}.setIntensity(${moduleIndex},${brightness});
+seg${chainIndex + 1}.clearDisplay(${moduleIndex});`
+            );
+        });
     });
 
     return lines.join('\n\n');
@@ -387,83 +398,6 @@ if(
 }
 `;
 }
-
-/**
- * =====================================================================
- * Calculate Logical Decimal Position
- * =====================================================================
- *
- * Converts a physical decimal selection into the logical decimal
- * position expected by the generated Arduino firmware.
- *
- * Physical Digits
- * ----------------
- * D8 D7 D6 D5 D4 D3 D2 D1
- *
- * Logical Digits
- * ----------------
- * Depends on:
- * • Used Digits
- * • Reverse Digits
- *
- * Returns
- * -------
- * 0 = No Decimal
- * 1..8 = Logical Decimal Position
- *
- * =====================================================================
- */
-/*function calculateLogicalDecimalDigit(display) {
-    // ------------------------------------------------------------
-    // No Decimal Selected
-    // ------------------------------------------------------------
-
-    if (!display.decimalPhysicalDigit) {
-        return 0;
-    }
-
-    // ------------------------------------------------------------
-    // Build Active Physical Digit List
-    // ------------------------------------------------------------
-
-    const activeDigits = [];
-
-    for (let i = 8; i >= 1; i--) {
-        if (display.usedDigits[i - 1]) {
-            activeDigits.push(i);
-        }
-    }
-
-    // ------------------------------------------------------------
-    // Reverse Layout
-    // ------------------------------------------------------------
-
-    if (display.reverseDigits) {
-        activeDigits.reverse();
-    }
-
-    // ------------------------------------------------------------
-    // Locate Decimal
-    // ------------------------------------------------------------
-
-    const index = activeDigits.indexOf(display.decimalPhysicalDigit);
-
-    if (index === -1) {
-        return 0;
-    }
-
-    // return index + 1;
-    const logicalDecimal = index + 1;
-
-    console.log('DECIMAL TRANSLATION', {
-        physical: display.decimalPhysicalDigit,
-        reverse: display.reverseDigits,
-        active: activeDigits,
-        logical: logicalDecimal,
-    });
-
-    return logicalDecimal;
-} */
 
 function calculateLogicalDecimalDigit(display) {
     // ------------------------------------------------------------

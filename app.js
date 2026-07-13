@@ -3385,20 +3385,63 @@ function buildPreviewCharacters() {
 function applyDecimal(preview) {
     const selectedDecimal = document.querySelector('input[name="displayDecimal"]:checked');
 
-    const decimalPhysicalDigit = selectedDecimal ? parseInt(selectedDecimal.value) : 0;
+    if (!selectedDecimal) {
+        return preview;
+    }
+
+    const decimalPhysicalDigit = parseInt(selectedDecimal.value);
+
+    const reverse = document.getElementById('displayReverseDigits').checked;
+
+    // ------------------------------------------------------------
+    // Determine the active physical digits
+    // (D8 -> D1, same order as the preview string)
+    // ------------------------------------------------------------
+
+    const activeDigits = [];
+
+    for (let physical = 8; physical >= 1; physical--) {
+        if (document.getElementById(`displayDigit${physical}`).checked) {
+            activeDigits.push(physical);
+        }
+    }
+
+    // ------------------------------------------------------------
+    // Find the selected physical digit
+    // ------------------------------------------------------------
+
+    let targetIndex = activeDigits.indexOf(decimalPhysicalDigit);
+
+    if (targetIndex === -1) {
+        return preview;
+    }
+
+    // ------------------------------------------------------------
+    // Reverse follows the firmware logical mapping
+    // ------------------------------------------------------------
+
+    if (reverse) {
+        targetIndex = activeDigits.length - 1 - targetIndex;
+    }
+
+    // ------------------------------------------------------------
+    // Insert decimal after the target active digit
+    // ------------------------------------------------------------
 
     let result = '';
 
-    let physical = 8;
+    let activeIndex = 0;
 
     for (const ch of preview) {
         result += ch;
 
-        if (physical === decimalPhysicalDigit && ch !== '-') {
-            result += '.';
-        }
+        if (ch !== '-') {
+            if (activeIndex === targetIndex) {
+                result += '.';
+            }
 
-        physical--;
+            activeIndex++;
+        }
     }
 
     return result;
