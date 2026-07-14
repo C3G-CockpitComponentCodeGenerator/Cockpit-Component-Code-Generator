@@ -1,60 +1,40 @@
 export function generateFirmwareModel(deviceModel) {
-console.log(
-    "FIRMWARE MODEL FUNCTION HIT"
-);
- const firmwareModel = {
+    const firmwareModel = {
+        projectName: project.projectName,
 
-    console.log("FIRMWARE MODEL BUILD");
-console.log(
-    "FIRMWARE MODEL FUNCTION HIT"
-);
-console.log(project);
+        deviceName: project.deviceName,
 
-    projectName:
-        project.projectName,
+        authorId: project.authorId,
 
-    deviceName:
-        project.deviceName,
+        guid: project.guid,
 
-    authorId:
-        project.authorId,
-
-    guid:
-        project.guid,
-
-    registration: [],
-    inputs: [],
-    outputs: []
-};
+        registration: [],
+        inputs: [],
+        outputs: [],
+    };
 
     let nextId = 1;
 
-    deviceModel.forEach(device => {
-
-        const entry = createFirmwareEntry(
-            device,
-            nextId++
-        );
+    deviceModel.forEach((device) => {
+        const entry = createFirmwareEntry(device, nextId++);
 
         validateFirmwareEntry(entry);
 
         firmwareModel.registration.push(entry);
 
-        if (entry.direction === "INPUT") {
+        if (entry.direction === 'INPUT') {
             firmwareModel.inputs.push(entry);
         }
 
-        if (entry.direction === "OUTPUT") {
+        if (entry.direction === 'OUTPUT') {
             firmwareModel.outputs.push(entry);
         }
-
     });
 
     return firmwareModel;
 }
 
 function createFirmwareEntry(device, id) {
-
     return {
         id,
 
@@ -74,53 +54,39 @@ function createFirmwareEntry(device, id) {
 
         positions: device.positions,
 
-        positionNames: device.positionNames
+        positionNames: device.positionNames,
     };
 }
 
 function getDirection(device) {
-
     switch (device.componentType) {
+        case 'pushbutton':
+        case 'toggle':
+        case 'encoder':
+            return 'INPUT';
 
-        case "pushbutton":
-        case "toggle":
-        case "encoder":
-            return "INPUT";
-
-        case "led":
-            return "OUTPUT";
+        case 'led':
+            return 'OUTPUT';
 
         default:
-            throw new Error(
-                `Unknown component type: ${device.componentType}`
-            );
+            throw new Error(`Unknown component type: ${device.componentType}`);
     }
 }
 
 function validateFirmwareEntry(entry) {
-
     if (!entry.tag) {
-        throw new Error(
-            "Firmware entry missing tag"
-        );
+        throw new Error('Firmware entry missing tag');
     }
 
     if (!entry.type) {
-        throw new Error(
-            `${entry.tag} missing SPAD type`
-        );
+        throw new Error(`${entry.tag} missing SPAD type`);
     }
 
     if (!entry.behavior) {
-        throw new Error(
-            `${entry.tag} missing behavior`
-        );
+        throw new Error(`${entry.tag} missing behavior`);
     }
 
     if (!entry.pins?.length) {
-        throw new Error(
-            `${entry.tag} missing pin allocation`
-        );
+        throw new Error(`${entry.tag} missing pin allocation`);
     }
 }
-

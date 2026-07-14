@@ -35,8 +35,6 @@ function allocatePins(project) {
 
         if (!result) return null;
 
-        console.log('Allocating', result.pin, 'from', result.device.address);
-
         result.device.allocatePin(result.pin);
 
         return result;
@@ -139,7 +137,6 @@ function allocatePins(project) {
     const encoders = project.components.filter((c) => c.type === 'encoder');
 
     for (const encoder of encoders) {
-        console.log('ENCODER IN ALLOCATOR', encoder);
         const assigned = [];
 
         const useMCP = String(encoder.assignedDevice || '').startsWith('MCP');
@@ -388,11 +385,7 @@ function allocatePins(project) {
 
         const needed = getComponentPins(component);
 
-        console.log('Component:', component.label, 'AssignedDevice:', component.assignedDevice);
-
         const useMCP = String(component.assignedDevice || '').startsWith('MCP');
-
-        console.log('useMCP:', useMCP);
 
         const assigned = [];
 
@@ -650,7 +643,7 @@ function allocatePins(project) {
 
 function validateProject(project) {
     const result = allocatePins(project);
-    console.log(result);
+
     return result.valid;
 }
 
@@ -660,9 +653,6 @@ function validateProject(project) {
 
 function buildAllocationRows(project) {
     const result = allocatePins(project);
-    console.log(result);
-
-    console.log(result.allocations);
 
     if (!result.valid) return [];
 

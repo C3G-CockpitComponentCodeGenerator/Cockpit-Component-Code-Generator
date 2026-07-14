@@ -258,14 +258,10 @@ function calculateProjectResources(components) {
         const definition = COMPONENT_TYPES[component.type];
 
         const pins = definition.getPins(component);
-        //  console.log(component.label, component.type, pins);
+
         if (component.type === 'sevensegment') {
             displayUsed += component.modules || 1;
         }
-
-        //  console.log(component.type, definition.resourceType, pins);
-
-        console.log(component.label, component.type, definition.resourceType, pins);
 
         switch (definition.resourceType) {
             case 'gpio':

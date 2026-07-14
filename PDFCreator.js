@@ -16,7 +16,6 @@ function exportWiringPDF() {
     addComponentAllocationPage(doc);
     addBoardPinPage(doc);
     addMCPPages(doc);
-    //addSupportPage(doc);
     addPDFSupportPage(doc);
 
     doc.save(`${project.projectName || 'Project'}-Wiring-Guide.pdf`);
@@ -34,23 +33,9 @@ function addCoverPage(doc) {
 function addProjectSummaryPage(doc) {
     const allocation = allocatePins(project);
 
-    console.log('PDF Project', project);
-
-    console.log('PDF Allocation', allocation);
-
     doc.setFontSize(18);
 
     doc.text('Project Summary', 20, 20);
-
-    /*   const rows = [
-        ['Board', getSelectedBoard().name],
-        ['Components', String(project.components.length)],
-        ['MCP23017', String(expansionManager.getDevices().length)],
-        ['GPIO Used', String(allocation.boardGPIOUsed)],
-        ['Analog Used', String(allocation.analogUsed)],
-        ['PWM Used', String(allocation.pwmUsed)],
-        ['Displays', String(allocation.displaysUsed ?? 0)],
-    ]; */
 
     const gpioUsed = allocation.reservedPins.length;
 
@@ -81,8 +66,6 @@ function addProjectSummaryPage(doc) {
 function addComponentAllocationPage(doc) {
     const allocation = allocatePins(project);
 
-    console.log('PDF Allocations', allocation.allocations);
-
     doc.setFontSize(18);
 
     doc.text('Component Allocation', 20, 20);
@@ -94,8 +77,6 @@ function addComponentAllocationPage(doc) {
         getAssignedDeviceName(a.component),
         a.pins.join(', '),
     ]);
-
-    console.log('PDF Rows', rows);
 
     doc.autoTable({
         startY: 30,

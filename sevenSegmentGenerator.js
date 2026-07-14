@@ -22,9 +22,6 @@ function generateSevenSegmentObjects(firmwareModel) {
     const displayGroups = {};
 
     displays.forEach((display) => {
-        //  console.log('DISPLAY OBJECT', display);
-        console.log('DISPLAY OBJECT', JSON.parse(JSON.stringify(display)));
-
         const csPin = display.pins.find((p) => p.startsWith('CS:'));
 
         const key = csPin;
@@ -35,8 +32,6 @@ function generateSevenSegmentObjects(firmwareModel) {
 
         displayGroups[key].push(display);
     });
-
-    console.log('DISPLAY GROUPS', displayGroups);
 
     const lines = [];
 
@@ -190,14 +185,9 @@ function generateDisplayUpdateHandler(firmwareModel) {
             displayRouting[display.id] = {
                 chain: chainIndex + 1,
                 module: display.moduleIndex,
-                // module: display.moduleCount - display.moduleIndex - 1,
             };
-            console.log(display.label, '-> Chain:', chainIndex + 1, 'Module:', display.moduleIndex);
         });
-        //  console.log(display.label, display.id, display.moduleIndex, display.moduleCount);
     });
-
-    console.log('DISPLAY ROUTING', displayRouting);
 
     const clearDisplayCode = displays
         .map((display) => {

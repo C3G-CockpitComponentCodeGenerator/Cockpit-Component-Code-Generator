@@ -99,10 +99,6 @@ function populateBoards() {
 // =====================================
 
 function updateComponentOptions() {
-    //  console.log(project.expansionDevices);
-
-    //   console.log(project.expansionDevices[0]);
-
     const assignedToGroup = document.getElementById('assignedToGroup');
     const type = document.getElementById('componentType').value;
 
@@ -123,7 +119,6 @@ function updateComponentOptions() {
     populateAssignedDeviceDropdown();
 
     project.components.forEach((c, index) => {
-        console.log('USED PINS', usedPins);
         if (index === editIndex) {
             return;
         }
@@ -163,11 +158,9 @@ function updateComponentOptions() {
             if (c.manualCS !== undefined && c.manualCS !== null) {
                 usedPins.push(`${c.assignedDevice}:${c.manualCS}`);
             }
-
-            console.log('USED PINS', usedPins);
         }
     });
-    //  console.log('USED PINS', usedPins);
+
     //----create the rotary dropdowns----
 
     if (project.allocationMode === 'MANUAL' && type === 'rotaryswitch') {
@@ -197,16 +190,11 @@ function updateComponentOptions() {
             const select = document.createElement('select');
 
             select.id = `manualRotaryPin${i}`;
-            console.log('ROTARY USED PINS', usedPins);
-            // board.gpioPins.forEach((pin) => {
+
             availablePins.forEach((pin) => {
                 const pinKey = `${selectedDevice}:${pin}`;
 
-                /*   if (usedPins.includes(pinKey)) {
-                    return;
-                } */
                 if (usedPins.includes(pinKey)) {
-                    console.log('HIDING:', pinKey);
                     return;
                 }
 
@@ -266,14 +254,6 @@ function updateComponentOptions() {
                 availablePins = mcp.pins.filter((pin) => !mcp.usedPins.includes(pin));
             }
         }
-
-        /*   availablePins.forEach((pin) => {
-            if (usedPins.includes(pin)) {
-                return;
-
-                console.log('ENCODER Selected Device:', selectedDevice);
-            } */
-        // changed
 
         availablePins.forEach((pin) => {
             const pinKey = `${selectedDevice}:${pin}`;
@@ -536,8 +516,6 @@ function addOrUpdateComponent() {
         return;
     }
 
-    console.log('Manual Label:', manualPinLabel);
-
     if (manualPinLabel) {
         manualPinLabel.textContent = type === 'sevensegment' ? 'CS Pin' : 'GPIO Pin';
     }
@@ -584,14 +562,11 @@ Not MCP Compatible`
     }
 
     const result = allocatePins(project);
-    console.log(result);
 
     if (!result.valid) {
         if (editIndex >= 0) return;
 
         project.components.pop();
-
-        console.log('Allocation Result', result);
 
         const error = result.errors[0];
 
@@ -710,13 +685,7 @@ function buildComponent(type) {
             component.encoderMode = document.getElementById('encoderMode').value;
 
             if (project.allocationMode === 'MANUAL') {
-                console.log('A VALUE', document.getElementById('manualEncoderPinA').value);
-
-                console.log('B VALUE', document.getElementById('manualEncoderPinB').value);
-                component.manualPinA = getManualPinValue('manualEncoderPinA');
-
                 component.manualPinB = getManualPinValue('manualEncoderPinB');
-                console.log('ENCODER COMPONENT', component);
             }
 
             break;
@@ -735,13 +704,8 @@ function buildComponent(type) {
 
             if (project.allocationMode === 'MANUAL') {
                 if (component.positions === 2) {
-                    //  component.manualPin = parseInt(document.getElementById('manualPin').value);
                     component.manualPin = getManualPinValue('manualPin');
                 } else {
-                    // component.manualPinA = parseInt(document.getElementById('manualTogglePinA').value);
-
-                    // component.manualPinB = parseInt(document.getElementById('manualTogglePinB').value);
-
                     component.manualPinA = getManualPinValue('manualTogglePinA');
 
                     component.manualPinB = getManualPinValue('manualTogglePinB');
@@ -772,8 +736,6 @@ function buildComponent(type) {
         case 'rotaryswitch':
             component.positions = parseInt(document.getElementById('rotaryPositions').value);
 
-            console.log('ROTARY NAMES RAW', document.getElementById('rotaryPositionNames').value);
-
             component.positionNames = document
                 .getElementById('rotaryPositionNames')
                 .value.split('\n')
@@ -801,7 +763,6 @@ for each position.`
                 component.manualPins = [];
 
                 for (let i = 0; i < component.positions; i++) {
-                    // component.manualPins.push(parseInt(document.getElementById(`manualRotaryPin${i}`).value));
                     component.manualPins.push(getManualPinValue(`manualRotaryPin${i}`));
                 }
             }
@@ -815,10 +776,6 @@ for each position.`
             }
 
             break;
-
-        /*    case 'led':
-            component.ledType = document.getElementById('ledType').value;
-            break; */
 
         case 'led':
             component.ledType = document.getElementById('ledType').value;
@@ -837,9 +794,6 @@ for each position.`
             }
             component.displays = JSON.parse(JSON.stringify(displayConfigs));
 
-            /*    if (project.allocationMode === 'MANUAL') {
-                component.manualPin = parseInt(document.getElementById('manualPin').value);
-            }*/
             if (project.allocationMode === 'MANUAL') {
                 component.manualDIN = getManualPinValue('manualSegmentDIN');
                 component.manualCLK = getManualPinValue('manualSegmentCLK');
@@ -852,10 +806,6 @@ for each position.`
             break;
     }
 
-    //   console.log(component);
-    // console.log('Component Object');
-    console.log(component);
-    // console.dir(component);
     return component;
 }
 
@@ -864,17 +814,11 @@ function getManualPinValue(elementId) {
 
     const element = document.getElementById(elementId);
 
-    console.log('GET MANUAL PIN:', elementId, element);
-
     if (!element) {
         return null;
     }
 
-    console.log('PIN VALUE:', element.value);
-
     const assignedDevice = document.getElementById('manualAssignedDevice').value;
-
-    console.log('DEVICE:', assignedDevice);
 
     return assignedDevice === 'BOARD' ? parseInt(element.value) : element.value;
 }
@@ -1128,8 +1072,6 @@ function refreshUI() {
 
     renderNativePinMap();
     renderMCPPinMaps();
-
-    //   console.log('Allocation Mode:', project.allocationMode);
 }
 // =====================================
 // Components Table
@@ -1597,8 +1539,6 @@ function updateExpansionAdvisor() {
 
     const expansionUsed = resources.expansionGPIOUsed;
 
-    //  console.log(resources);
-
     const availableGPIO = getTotalGPIOCapacity();
 
     const gpioShortfall = Math.max(0, resources.gpioUsed - availableGPIO);
@@ -1739,25 +1679,10 @@ function refreshAssignmentDevices() {
     });
 }
 
-function debugProject() {
-    console.log(document.getElementById('projectName').value);
-
-    console.log(document.getElementById('deviceName').value);
-
-    console.log(document.getElementById('authorId').value);
-
-    console.log(document.getElementById('guid').value);
-
-    refreshUI();
-
-    console.log(project);
-}
-
 function exportFirmware() {
     const deviceModel = generateDeviceModel(project);
 
     const firmwareModel = generateFirmwareModel(deviceModel);
-    console.log(firmwareModel);
 
     const firmware = generateFirmware(firmwareModel);
 
@@ -2006,8 +1931,6 @@ function updateModuleNameFields() {
  * =====================================================================
  */
 function editDisplayConfig(index) {
-    // console.log('EDIT CLICKED', index);
-
     // ------------------------------------------------------------
     // STEP 1 - Select Display
     // ------------------------------------------------------------
@@ -2133,9 +2056,6 @@ function applyDefaultDisplayLayout() {
         document.getElementById(`displayDigit${i}`).checked = true;
     }
 
-    console.log('Display Layout Update');
-    console.log('Active Digits :', activeDigits);
-
     validateDisplayLayout();
     updateDecimalRadios();
 }
@@ -2178,7 +2098,6 @@ function updateDisplayLayout() {
     validateDisplayLayout();
     updateDecimalRadios();
     renderDisplayPreview();
-    console.log(`Selected Physical Digits : ${selectedDigits}`);
 }
 
 /**
@@ -2252,13 +2171,11 @@ function validateDisplayLayout() {
         status.textContent = `✗ Layout Invalid (${selectedDigits} of ${activeDigits} selected)`;
     }
 
-    console.log(`Layout Validation : ${selectedDigits}/${activeDigits}`);
-
     // ------------------------------------------------------------
     // STEP 4 - Enable / Disable Save Button
     // ------------------------------------------------------------
     const saveButton = document.getElementById('displaySaveButton');
-    console.log('Save Button:', saveButton);
+
     if (saveButton) {
         saveButton.disabled = selectedDigits !== activeDigits;
     }
@@ -2300,7 +2217,6 @@ function initializeDisplayLayout() {
 
     for (let i = 0; i <= 8; i++) {
         document.getElementById(`displayDecimal${i}`)?.addEventListener('change', () => {
-            console.log('Decimal Changed');
             renderDisplayPreview();
         });
     }
@@ -2361,8 +2277,6 @@ function saveDisplayConfig() {
     display.usedDigits = usedDigits;
 
     closeDisplayConfig();
-
-    console.log('DISPLAY CONFIG SAVED', displayConfigs[currentDisplayIndex]);
 }
 
 function closeDisplayConfig() {
@@ -2409,7 +2323,6 @@ function populateAssignedDeviceDropdown() {
 }
 
 function populateManualPinDropdown() {
-    //    console.log('populateManualPinDropdown() called');
     const pinSelect = document.getElementById('manualPin');
     const segmentDIN = document.getElementById('manualSegmentDIN');
     const segmentCLK = document.getElementById('manualSegmentCLK');
@@ -2523,7 +2436,6 @@ function populateManualPinDropdown() {
 }
 
 function renderNativePinMap() {
-    //    console.log('Pin map rendering...');
     const container = document.getElementById('nativePinMap');
 
     if (!container) return;
@@ -2537,8 +2449,6 @@ function renderNativePinMap() {
     const allocation = allocatePins(project);
 
     const usedPins = allocation.reservedPins || [];
-
-    //   console.log(usedPins);
 
     const title = document.createElement('h4');
 
@@ -2573,7 +2483,6 @@ function renderNativePinMap() {
         div.dataset.pin = String(pin);
 
         div.addEventListener('mouseenter', (e) => {
-            console.log('Hovering pin', pin);
             showPinTooltip(pin, e);
         });
 
@@ -2694,51 +2603,13 @@ function getPinAssignment(pin) {
     return null;
 }
 
-/*function getMCPPinAssignment(deviceName, pinName) {
-    console.log(project.components);
-
-   
-    return null;
-}
-// for (const component of configuredComponents) {
-/* for (const component of components) {
-        if (!component.pinAssignments) continue;
-
-        for (const assignment of Object.values(component.pinAssignments)) {
-            if (assignment === `${deviceName}:${pinName}`) {
-                return component;
-            }
-        }
-    }
-
-    return null;
-}*/
-/*function getMCPPinAssignment(address, pinName) {
-    const allocation = allocatePins(project);
-
-    for (const item of allocation.allocations) {
-        const found = item.pins.some((p) => String(p) === `${address}:${pinName}`);
-
-        if (found) {
-            return item.component;
-        }
-    }
-
-    return null;
-}*/
-
 function getMCPPinAssignment(address, pinName) {
     const allocation = allocatePins(project);
 
-    console.log('Looking for:', `${address}:${pinName}`);
-
     for (const item of allocation.allocations) {
-        console.log('Pins:', item.pins);
-
         const found = item.pins.some((p) => String(p) === `${address}:${pinName}`);
 
         if (found) {
-            console.log('FOUND!', item.component.label);
             return item.component;
         }
     }
@@ -2747,9 +2618,7 @@ function getMCPPinAssignment(address, pinName) {
 }
 
 function showPinTooltip(pin, e) {
-    //  console.log('showPinTooltip', pin);
     const assignment = getPinAssignment(pin);
-    //  console.log('assignment', assignment);
 
     const tooltip = document.getElementById('pinTooltip');
 
@@ -2771,8 +2640,6 @@ function showPinTooltip(pin, e) {
     tooltip.style.left = e.clientX + 15 + 'px';
 
     tooltip.style.top = e.clientY + 15 + 'px';
-
-    console.log(tooltip.style.display, tooltip.style.left, tooltip.style.top);
 }
 
 function renderMCPPinMaps() {
@@ -2967,8 +2834,6 @@ function highlightComponent(component) {
 
     const row = document.querySelector(`[data-component-index="${index}"]`);
 
-    console.log('Found Row', row);
-
     if (!row) return;
 
     row.scrollIntoView({
@@ -3018,12 +2883,6 @@ function highlightPin(pinId) {
         }
     }
 
-    console.log('Highlight Pin:', pinId);
-
-    console.log('Lookup Pin:', lookupPin);
-
-    console.log('Found Elements:', pinElements);
-
     if (!pinElements.length) return;
 
     pinElements.forEach((pinElement) => {
@@ -3045,14 +2904,9 @@ function highlightPin(pinId) {
 }
 
 function highlightPinsForComponent(component) {
-    console.log(component);
-    console.log(allocatePins(project).allocations);
     const allocation = allocatePins(project);
 
     const item = allocation.allocations.find((a) => a.component.id === component.id);
-
-    console.log('Component Clicked:', component);
-    console.log('Allocation:', item);
 
     if (!item) return;
 
@@ -3119,8 +2973,6 @@ function generateArduinoCode() {
         addBuildLog('Arduino code generated successfully.', 'SUCCESS');
 
         setGenerationStatus('Generation Successful', 'success');
-
-        console.log(ino);
     } catch (err) {
         console.error(err);
 
@@ -3222,7 +3074,7 @@ function updateDecimalRadios() {
     // ------------------------------------------------------------
     // STEP 1 - Enable / Disable Decimal Radios
     // ------------------------------------------------------------
-    console.log('updateDecimalRadios()');
+
     for (let i = 1; i <= 8; i++) {
         const digitCheckbox = document.getElementById(`displayDigit${i}`);
 
@@ -3237,8 +3089,6 @@ function updateDecimalRadios() {
 
     document.getElementById('displayDecimal0').disabled = false;
 
-    console.log('Decimal radios updated.');
-
     // ------------------------------------------------------------
     // STEP 3 - Ensure Current Decimal Selection Is Valid
     // ------------------------------------------------------------
@@ -3247,8 +3097,6 @@ function updateDecimalRadios() {
 
     if (selectedRadio && selectedRadio.disabled) {
         document.getElementById('displayDecimal0').checked = true;
-
-        console.log('Decimal moved to None.');
     }
     renderDisplayPreview();
 }
@@ -3303,22 +3151,6 @@ function renderDisplayPreview() {
     preview = applySuppressLeadingZeros(preview);
 
     document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview, brightness, selectedTheme);
-
-    //   document.getElementById('displayPreview').innerHTML = generateDisplaySVG_New(preview);
-
-    // document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview);
-
-    //  document.getElementById('displayPreview').textContent = preview;
-    //  document.getElementById('displayPreview').innerHTML = generateDisplaySVG(preview);
-    // ------------------------------------------------------------
-    // Temporary - New Renderer Test
-    // ------------------------------------------------------------
-
-    //  const model = createDisplayModel();
-
-    //  populateDisplayModel(model, preview);
-
-    //  document.getElementById('displayPreview').innerHTML = renderDisplay(model);
 }
 
 /**
@@ -3577,48 +3409,11 @@ function applySuppressLeadingZeros(preview) {
 function generateDisplaySVG_New(preview) {
     const model = C3G.Renderer.createDisplayModel();
     model.brightness = brightness;
-    console.log('Preview =', preview);
+
     C3G.Renderer.populateDisplayModel(model, preview);
 
     return C3G.Renderer.renderDisplay(model);
 }
-
-/* function generateDisplaySVG(preview) {
-    return `
-        <svg
-            width="100%"
-            height="80"
-            viewBox="0 0 420 80"
-            xmlns="http://www.w3.org/2000/svg">
-
-            <!-- Module Background -->
-
-            <rect
-                x="2"
-                y="2"
-                width="416"
-                height="76"
-                rx="8"
-                fill="#141414"
-                stroke="#3a3a3a"
-                stroke-width="2"/>
-
-            <!-- Temporary Text -->
-
-
-${generateDigitSVG(preview[0], 30)}
-${generateDigitSVG(preview[1], 75)}
-${generateDigitSVG(preview[2], 120)}
-${generateDigitSVG(preview[3], 165)}
-${generateDigitSVG(preview[4], 210)}
-${generateDigitSVG(preview[5], 255)}
-${generateDigitSVG(preview[6], 300)}
-${generateDigitSVG(preview[7], 345)}
-${generateDigitSVG(preview[8] ?? '', 390)}
-
-        </svg>
-    `;
-}*/
 
 function generateDisplaySVG(preview, brightness, selectedTheme) {
     const model = C3G.Renderer.createDisplayModel();
@@ -3626,13 +3421,9 @@ function generateDisplaySVG(preview, brightness, selectedTheme) {
 
     // model.theme = C3G.Renderer.DEFAULT_THEME;
 
-    console.log('Theme =', selectedTheme);
-    console.log(C3G.Renderer.DISPLAY_THEMES);
-
     // model.theme = C3G.Renderer.DISPLAY_THEMES[selectedTheme] ?? C3G.Renderer.DEFAULT_THEME;
     model.theme = C3G.Renderer.DISPLAY_THEMES[selectedTheme.toUpperCase()] ?? C3G.Renderer.DEFAULT_THEME;
 
-    console.log('Preview =', preview);
     C3G.Renderer.populateDisplayModel(model, preview);
 
     return C3G.Renderer.renderDisplay(model);

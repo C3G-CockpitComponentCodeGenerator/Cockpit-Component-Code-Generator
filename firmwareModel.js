@@ -16,8 +16,6 @@ function generateFirmwareModel(deviceModel) {
     let nextId = 1;
 
     deviceModel.forEach((device) => {
-        console.log(device);
-
         const entry = {
             id: nextId++,
 
@@ -63,7 +61,6 @@ function generateFirmwareModel(deviceModel) {
 
             switchPositions: device.switchPositions,
         };
-        console.log('FIRMWARE OUTPUT', entry);
 
         firmwareModel.registration.push(entry);
 
@@ -75,6 +72,6 @@ function generateFirmwareModel(deviceModel) {
             firmwareModel.outputs.push(entry);
         }
     });
-    console.log(firmwareModel.outputs.filter((d) => d.componentType === 'sevensegment'));
+
     return firmwareModel;
 }
