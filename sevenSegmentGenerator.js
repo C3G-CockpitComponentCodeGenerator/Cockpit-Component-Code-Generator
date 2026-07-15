@@ -136,18 +136,6 @@ function generateSevenSegmentSetup(firmwareModel) {
 
     const lines = [];
 
-    /*  Object.values(displayGroups).forEach((group, chainIndex) => {
-        const brightness = group[0].brightness ?? 8;
-
-        lines.push(
-            `for(int i = 0; i < ${group.length}; i++)
-{
-    seg${chainIndex + 1}.shutdown(i,false);
-    seg${chainIndex + 1}.setIntensity(i,${brightness});
-    seg${chainIndex + 1}.clearDisplay(i);
-}`
-        );
-    }); */
     Object.values(displayGroups).forEach((group, chainIndex) => {
         group.forEach((display, moduleIndex) => {
             const brightness = display.brightness ?? 8;

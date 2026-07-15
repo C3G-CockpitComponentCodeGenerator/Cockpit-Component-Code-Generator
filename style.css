@@ -1049,6 +1049,12 @@ br {
     color: #cfe8ff;
 }
 
+.pin-reserved {
+    background: #8a6d00;
+    border-color: #d4af37;
+    color: #fff;
+}
+
 .pin-unavailable {
     background: rgba(111, 128, 150, 0.16);
     border-color: rgba(130, 170, 220, 0.18);

@@ -195,6 +195,10 @@ function updateComponentOptions() {
             availablePins.forEach((pin) => {
                 const pinKey = `${selectedDevice}:${pin}`;
 
+                if (selectedDevice === 'BOARD' && isReservedPin(BOARDS[project.board], pin)) {
+                    return;
+                }
+
                 if (usedPins.includes(pinKey)) {
                     return;
                 }
@@ -258,6 +262,9 @@ function updateComponentOptions() {
 
         availablePins.forEach((pin) => {
             const pinKey = `${selectedDevice}:${pin}`;
+            if (selectedDevice === 'BOARD' && isReservedPin(BOARDS[project.board], pin)) {
+                return;
+            }
 
             if (usedPins.includes(pinKey)) {
                 return;
@@ -286,13 +293,12 @@ function updateComponentOptions() {
             togglePinA.innerHTML = '';
             togglePinB.innerHTML = '';
 
-            /*    availablePins.forEach((pin) => {
-                if (usedPins.includes(pin)) {
-                    return;
-                } */
-
             availablePins.forEach((pin) => {
                 const pinKey = `${selectedDevice}:${pin}`;
+
+                if (selectedDevice === 'BOARD' && isReservedPin(BOARDS[project.board], pin)) {
+                    return;
+                }
 
                 if (usedPins.includes(pinKey)) {
                     return;
@@ -2340,7 +2346,6 @@ function populateManualPinDropdown() {
         return;
     }
 
-    // pinSelect.innerHTML = '';
     if (pinSelect) pinSelect.innerHTML = '';
 
     if (segmentDIN) segmentDIN.innerHTML = '';
@@ -2407,6 +2412,10 @@ function populateManualPinDropdown() {
     availablePins.forEach((pin) => {
         const pinKey = `${selectedDevice}:${pin}`;
 
+        if (selectedDevice === 'BOARD' && isReservedPin(BOARDS[project.board], pin)) {
+            return;
+        }
+
         if (usedPins.includes(pinKey)) {
             return;
         }
@@ -2441,6 +2450,22 @@ function populateManualPinDropdown() {
             segmentCS.appendChild(option);
         }
     });
+
+    if (segmentDIN && segmentCLK && segmentCS && editIndex < 0) {
+        if (segmentDIN.options.length > 0) {
+            segmentDIN.selectedIndex = 0;
+        }
+
+        if (segmentCLK.options.length > 1) {
+            segmentCLK.selectedIndex = 1;
+        }
+
+        if (segmentCS.options.length > 2) {
+            segmentCS.selectedIndex = 2;
+        }
+
+        updateTriplePinDropdowns('manualSegmentDIN', 'manualSegmentCLK', 'manualSegmentCS');
+    }
 }
 
 function renderNativePinMap() {
@@ -2473,6 +2498,8 @@ function renderNativePinMap() {
 
         const isUsed = usedPins.includes(String(pin));
 
+        const isReserved = isReservedPin(board, pin);
+
         const isSpecial =
             pin === board.spi.miso ||
             pin === board.spi.mosi ||
@@ -2482,11 +2509,14 @@ function renderNativePinMap() {
 
         if (isUsed) {
             div.className = 'pin-box pin-used';
+        } else if (isReserved) {
+            div.className = 'pin-box pin-reserved';
         } else if (isSpecial) {
             div.className = 'pin-box pin-special';
         } else {
             div.className = 'pin-box pin-free';
         }
+
         div.textContent = pin;
         div.dataset.pin = String(pin);
 
@@ -2531,7 +2561,6 @@ function renderNativePinMap() {
 
             const analogPin = pinInfo.analog;
 
-            //   const isUsed = usedPins.includes(analogPin);
             const isUsed = usedPins.includes(analogPin) || usedPins.includes(String(pinInfo.digital));
 
             if (isUsed) {
@@ -2672,11 +2701,6 @@ function createMCPPinCard(device) {
     const card = document.createElement('div');
     card.className = 'mcp-pin-card';
 
-    /* const address =
-        typeof device.address === 'string'
-            ? device.address.toUpperCase()
-            : '0x' + device.address.toString(16).toUpperCase(); */
-
     const address = getMCPAddress(device);
 
     card.innerHTML = `
@@ -2695,11 +2719,6 @@ function createMCPPinCard(device) {
     card.className = 'mcp-pin-card';
 
     const address = getMCPAddress(device);
-    /*  const address =
-        typeof device.address === 'string'
-            ? device.address.toUpperCase()
-            : '0x' + device.address.toString(16).toUpperCase(); */
-
     card.innerHTML = `
     <div class="mcp-header">
         MCP23017 (${address})

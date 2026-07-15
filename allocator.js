@@ -45,9 +45,12 @@ function allocatePins(project) {
     }
 
     function isReserved(pin) {
+        if (isReservedPin(board, pin)) {
+            return true;
+        }
+
         return reservedPins.has(String(pin));
     }
-
     function getFreeGPIO() {
         return board.gpioPins.filter((pin) => !isReserved(pin));
     }
@@ -233,7 +236,8 @@ function allocatePins(project) {
 
                 reservePin(pin);
 
-                assigned.push(pin);
+                //   assigned.push(pin);
+                assigned.push(`BOARD:${pin}`);
             }
         }
 
@@ -326,48 +330,12 @@ function allocatePins(project) {
 
             allocations.push({
                 component,
-                pins: [`DIN:${dinPin}`, `CLK:${clkPin}`, `CS:${csPin}`, `Modules:${component.modules || 1}`],
+                //    pins: [`DIN:${dinPin}`, `CLK:${clkPin}`, `CS:${csPin}`, `Modules:${component.modules || 1}`],
+                pins: [`BOARD:${dinPin}`, `BOARD:${clkPin}`, `BOARD:${csPin}`],
             });
 
             continue;
         }
-
-        /*  if (component.type === 'sevensegment') {
-            let csPin;
-
-            if (project.allocationMode === 'MANUAL') {
-                //    csPin = component.manualPin;
-
-                const dinPin = component.manualDIN;
-                const clkPin = component.manualCLK;
-                const csPin = component.manualCS;
-
-                if (isReserved(dinPin) || isReserved(clkPin) || isReserved(csPin)) {
-                    return {
-                        valid: false,
-                        errors,
-                    };
-                }
-            } else {
-                csPin = board.displayCSPins?.find((pin) => getFreeGPIO().includes(pin));
-
-                if (csPin === undefined) {
-                    csPin = getFreeGPIO()[0];
-                }
-            }
-
-            // reservePin(csPin);
-            reservePin(dinPin);
-            reservePin(clkPin);
-            reservePin(csPin);
-
-            allocations.push({
-                component,
-
-                pins: [`DIN:${dinPin}`, `CLK:${clkPin}`, `CS:${csPin}`, `Modules:${component.modules || 1}`],
-            });
-            continue;
-        } */
 
         // I2C Displays
 
