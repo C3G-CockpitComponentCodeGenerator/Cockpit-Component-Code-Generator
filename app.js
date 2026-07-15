@@ -116,7 +116,8 @@ function updateComponentOptions() {
     const selectedDevice = document.getElementById('manualAssignedDevice').value;
 
     const usedPins = [];
-    populateAssignedDeviceDropdown();
+    //  populateAssignedDeviceDropdown();
+    updateAssignedDeviceState();
 
     project.components.forEach((c, index) => {
         if (index === editIndex) {
@@ -386,10 +387,11 @@ function updateComponentOptions() {
     sevenSegmentPinOptions.style.display =
         project.allocationMode === 'MANUAL' && type === 'sevensegment' ? 'block' : 'none';
 
-    deviceOptions.style.display =
+    /* deviceOptions.style.display =
         project.allocationMode === 'MANUAL' && ['pushbutton', 'toggle', 'encoder', 'rotaryswitch', 'led'].includes(type)
             ? 'block'
-            : 'none';
+            : 'none'; */
+    deviceOptions.style.display = project.allocationMode === 'MANUAL' ? 'block' : 'none';
 
     rotaryPinOptions.style.display = project.allocationMode === 'MANUAL' && type === 'rotaryswitch' ? 'block' : 'none';
 
@@ -532,7 +534,8 @@ function addOrUpdateComponent() {
 
     const assigningToMCP = component.assignedDevice !== 'BOARD';
 
-    if (assigningToMCP && !definition.mcpCompatible(component)) {
+    // if (assigningToMCP && !definition.mcpCompatible(component)) {
+    if (assigningToMCP && !isMCPCompatible(component)) {
         alert(
             `This component cannot be assigned
 to an MCP23017.
@@ -685,6 +688,7 @@ function buildComponent(type) {
             component.encoderMode = document.getElementById('encoderMode').value;
 
             if (project.allocationMode === 'MANUAL') {
+                component.manualPinA = getManualPinValue('manualEncoderPinA');
                 component.manualPinB = getManualPinValue('manualEncoderPinB');
             }
 
@@ -833,6 +837,10 @@ function editComponent(index) {
 
     document.getElementById('componentType').value = c.type;
 
+    if (c.assignedDevice) {
+        document.getElementById('manualAssignedDevice').value = c.assignedDevice;
+    }
+
     updateComponentOptions();
 
     if (c.manualPin !== undefined) {
@@ -929,9 +937,9 @@ function editComponent(index) {
 
     if (c.displayType) document.getElementById('displayType').value = c.displayType;
 
-    if (c.assignedDevice) {
+    /*   if (c.assignedDevice) {
         document.getElementById('assignedDevice').value = c.assignedDevice;
-    }
+    } */
 
     document.getElementById('addButton').innerText = 'Update Component';
 

@@ -242,6 +242,44 @@ function getComponentName(component) {
     return COMPONENT_TYPES[component.type].name;
 }
 
+function isMCPCompatible(component) {
+    if (!component) return false;
+
+    const definition = COMPONENT_TYPES[component.type];
+
+    if (!definition) return false;
+
+    return definition.mcpCompatible(component);
+}
+
+function updateAssignedDeviceState() {
+    const type = document.getElementById('componentType').value;
+
+    const select = document.getElementById('manualAssignedDevice');
+
+    if (!select) return;
+
+    const component = {
+        type,
+        ledType: document.getElementById('ledType')?.value,
+        displayType: document.getElementById('displayType')?.value,
+    };
+
+    if (isMCPCompatible(component)) {
+        select.disabled = false;
+
+        populateAssignedDeviceDropdown();
+    } else {
+        select.innerHTML = '';
+
+        select.add(new Option('Main Board', 'BOARD'));
+
+        select.value = 'BOARD';
+
+        select.disabled = true;
+    }
+}
+
 function calculateProjectResources(components) {
     let gpioUsed = 0;
     let analogUsed = 0;
