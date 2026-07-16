@@ -26,9 +26,19 @@ A visual firmware generation toolkit for SPAD.neXt-compatible cockpit hardware.
 
 <p align="center">
 
-<!-- GitHub badges will be added after the first public release -->
+<img src="https://img.shields.io/badge/SPAD.neXt-Compatible-0078D4?style=for-the-badge" alt="SPAD.neXt Compatible">
 
-🚀 **Version 1.0.0** &nbsp;&nbsp;|&nbsp;&nbsp; **Stable Release** &nbsp;&nbsp;|&nbsp;&nbsp; **Hardware Validated** &nbsp;&nbsp;|&nbsp;&nbsp; **Open Source**
+<br><br>
+
+<img src="https://img.shields.io/github/v/release/C3G-CockpitComponentCodeGenerator/Cockpit-Component-Code-Generator?style=for-the-badge" alt="Release">
+
+<img src="https://img.shields.io/github/license/C3G-CockpitComponentCodeGenerator/Cockpit-Component-Code-Generator?style=for-the-badge" alt="License">
+
+<img src="https://img.shields.io/github/stars/C3G-CockpitComponentCodeGenerator/Cockpit-Component-Code-Generator?style=for-the-badge" alt="Stars">
+
+<img src="https://img.shields.io/github/forks/C3G-CockpitComponentCodeGenerator/Cockpit-Component-Code-Generator?style=for-the-badge" alt="Forks">
+
+<img src="https://img.shields.io/github/issues/C3G-CockpitComponentCodeGenerator/Cockpit-Component-Code-Generator?style=for-the-badge" alt="Issues">
 
 </p>
 
