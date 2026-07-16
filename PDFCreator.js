@@ -6,6 +6,86 @@ const PDFCreator = {
     exportWiringPDF,
 };
 
+//====================================================
+// PDF Theme
+//====================================================
+
+const PDF_THEME = {
+    primary: [32, 70, 135],
+    light: [245, 245, 245],
+    border: [190, 190, 190],
+    text: [40, 40, 40],
+};
+
+function drawPageHeader(doc, title) {
+    doc.setFillColor(...PDF_THEME.primary);
+    doc.rect(0, 0, 210, 18, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(255);
+    doc.text(title, 15, 12);
+
+    doc.setTextColor(...PDF_THEME.text);
+}
+
+function drawPageFooter(doc) {
+    const page = doc.getCurrentPageInfo().pageNumber;
+
+    doc.setDrawColor(...PDF_THEME.border);
+    doc.line(15, 285, 195, 285);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(120);
+
+    doc.text(`Project: ${project.projectName || 'Untitled Project'}`, 15, 291);
+
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 85, 291);
+
+    doc.text(`Page ${page}`, 180, 291);
+}
+
+function createStyledTable(doc, head, body, startY = 25) {
+    doc.autoTable({
+        startY,
+
+        head,
+
+        body,
+
+        theme: 'grid',
+
+        margin: {
+            left: 15,
+            right: 15,
+        },
+
+        styles: {
+            font: 'helvetica',
+            fontSize: 10,
+            cellPadding: 3,
+            lineColor: PDF_THEME.border,
+            lineWidth: 0.2,
+            textColor: PDF_THEME.text,
+            valign: 'middle',
+        },
+
+        headStyles: {
+            fillColor: PDF_THEME.primary,
+            textColor: 255,
+            fontStyle: 'bold',
+            halign: 'center',
+        },
+
+        alternateRowStyles: {
+            fillColor: PDF_THEME.light,
+        },
+    });
+
+    drawPageFooter(doc);
+}
+
 function exportWiringPDF() {
     const { jsPDF } = window.jspdf;
 
@@ -22,20 +102,42 @@ function exportWiringPDF() {
 }
 
 function addCoverPage(doc) {
-    doc.setFontSize(20);
+    doc.setFillColor(...PDF_THEME.primary);
+    doc.rect(0, 0, 210, 297, 'F');
 
-    doc.text('SPAD.neXt Cockpit Device Generator', 20, 30);
+    doc.setTextColor(255);
 
-    doc.text('Hardware Wiring Guide', 20, 45);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.text('Cockpit Device Generator', 105, 55, { align: 'center' });
+
+    doc.setFontSize(18);
+    doc.text('Hardware Wiring Guide', 105, 70, { align: 'center' });
+
+    doc.setFontSize(12);
+
+    doc.text(`Project`, 105, 105, { align: 'center' });
+    doc.text(project.projectName || 'Untitled Project', 105, 115, { align: 'center' });
+
+    doc.text(`Board`, 105, 135, { align: 'center' });
+    doc.text(getSelectedBoard().name, 105, 145, { align: 'center' });
+
+    doc.text(`Generated`, 105, 165, { align: 'center' });
+    doc.text(new Date().toLocaleDateString(), 105, 175, { align: 'center' });
+
+    doc.setFontSize(10);
+
+    doc.text('Generated automatically by SPAD.neXt Cockpit Device Generator', 105, 270, { align: 'center' });
 
     doc.addPage();
 }
 function addProjectSummaryPage(doc) {
     const allocation = allocatePins(project);
 
-    doc.setFontSize(18);
+    //   doc.setFontSize(18);
 
-    doc.text('Project Summary', 20, 20);
+    //   doc.text('Project Summary', 20, 20);
+    drawPageHeader(doc, 'Project Summary');
 
     const gpioUsed = allocation.reservedPins.length;
 
@@ -66,9 +168,10 @@ function addProjectSummaryPage(doc) {
 function addComponentAllocationPage(doc) {
     const allocation = allocatePins(project);
 
-    doc.setFontSize(18);
+    //  doc.setFontSize(18);
 
-    doc.text('Component Allocation', 20, 20);
+    //   doc.text('Component Allocation', 20, 20);
+    drawPageHeader(doc, 'Component Allocation');
 
     const rows = allocation.allocations.map((a) => [
         a.component.id,
@@ -87,9 +190,10 @@ function addComponentAllocationPage(doc) {
     doc.addPage();
 }
 function addBoardPinPage(doc) {
-    doc.setFontSize(18);
+    //   doc.setFontSize(18);
 
-    doc.text('Board Pin Allocation', 20, 20);
+    //   doc.text('Board Pin Allocation', 20, 20);
+    drawPageHeader(doc, 'Board Pin Allocation');
 
     const allocation = allocatePins(project);
 
@@ -131,25 +235,46 @@ function addMCPPages(doc) {
             });
         });
 
-        doc.autoTable({
+        /*      doc.autoTable({
             startY: 30,
             head: [['Pin', 'Component', 'Type']],
             body: rows,
-        });
+        }); */
+        createStyledTable(doc, [['Item', 'Value']], rows);
 
         doc.addPage();
     });
 }
-function addPDFSupportPage(doc) {
+/*function addPDFSupportPage(doc) {
     doc.setFontSize(20);
 
-    doc.text('Support & Resources', 20, 30);
+    //  doc.text('Support & Resources', 20, 30);
 
-    doc.setFontSize(12);
+    //  doc.setFontSize(12);
+    drawPageHeader(doc, 'Support & Resources');
 
     doc.text('GitHub Repository', 20, 60);
 
     doc.text('https://github.com/YOURNAME/SPAD.neXt-Cockpit-Device-Generator', 20, 70);
 
     doc.text('Documentation and Releases', 20, 90);
+} */
+
+function addPDFSupportPage(doc) {
+    drawPageHeader(doc, 'Support & Resources');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+
+    doc.text('GitHub Repository', 20, 35);
+
+    doc.setFont('helvetica', 'normal');
+
+    doc.text('https://github.com/C3G-CockpitComponentCodeGenerator/Cockpit-Component-Code-Generator', 20, 45);
+
+    doc.text('Documentation', 20, 65);
+    doc.text('Bug Reports', 20, 75);
+    doc.text('Feature Requests', 20, 85);
+
+    drawPageFooter(doc);
 }
