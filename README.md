@@ -270,3 +270,167 @@ _Generate organized wiring documentation to simplify cockpit assembly._
 ![Wiring Documentation](docs/screenshots/wiring-documentation.png)
 
 ---
+
+# Installation
+
+## Download
+
+Download the latest stable release from the GitHub Releases page.
+
+> **Recommended:** Always use the latest stable release unless you specifically need an earlier version.
+
+---
+
+## Requirements
+
+- Windows 10 / Windows 11
+- Arduino IDE 2.x (or newer)
+- Supported Arduino Board
+    - Arduino Mega 2560
+    - Arduino Mega 2560 Pro Mini
+    - Arduino Pro Micro
+- SPAD.neXt
+
+---
+
+# Quick Start
+
+Getting started with C3G takes only a few minutes.
+
+1. Launch **C3G**.
+2. Create a new project.
+3. Select your Arduino board.
+4. Add cockpit components.
+5. Allocate GPIO pins automatically or manually.
+6. Review the Interactive GPIO Pin Map.
+7. Generate the firmware.
+8. Upload the firmware using the Arduino IDE.
+9. Connect your hardware to SPAD.neXt.
+10. Start flying.
+
+---
+
+# Building from Source
+
+C3G is an open-source project.
+
+Clone the repository:
+
+```bash
+git clone https://github.com/<YOUR_USERNAME>/cockpit-component-code-generator.git
+```
+
+Open the project folder and launch `index.html` in your preferred development environment.
+
+---
+
+# Project Philosophy
+
+C3G follows one guiding principle:
+
+> **Reliability before features.**
+
+Every feature is designed, implemented, and validated on real hardware before becoming part of a production release.
+
+The objective is not to support the largest number of devices.
+
+The objective is to provide cockpit builders with a dependable engineering toolkit they can trust.
+
+<br>
+
+# Roadmap
+
+Version **1.0.0** is the first stable public release.
+
+Future development may include:
+
+- Additional Arduino boards
+- Additional display technologies
+- Enhanced wiring documentation
+- Improved project templates
+- Additional cockpit components
+- Plugin architecture
+- Localization
+
+Future features will continue to follow the same philosophy:
+
+**Stability first.**
+
+---
+
+# Contributing
+
+Contributions are welcome.
+
+Whether you're reporting bugs, suggesting improvements, improving documentation, testing hardware, or contributing code, every contribution helps make C3G better for the entire flight simulation community.
+
+If you'd like to contribute:
+
+- Report bugs with detailed reproduction steps.
+- Suggest new features through GitHub Issues.
+- Submit pull requests for improvements.
+- Help improve the documentation.
+- Share your cockpit builds and feedback.
+
+---
+
+# Support
+
+If you encounter a problem:
+
+- Search existing GitHub Issues.
+- Open a new Issue if the problem has not already been reported.
+- Include screenshots, logs, and reproduction steps whenever possible.
+
+---
+
+# License
+
+This project is released under the **MIT License**.
+
+See the `LICENSE` file for details.
+
+---
+
+# Acknowledgements
+
+C3G would not exist without the inspiration, testing, and feedback provided by the flight simulation community.
+
+Special thanks to:
+
+- The SPAD.neXt community
+- Hardware testers
+- Early adopters
+- Everyone who shared ideas, bug reports, and feature suggestions throughout development
+
+Your feedback has helped shape C3G into the project it is today.
+
+---
+
+# About the Author
+
+**Perur Chandramouli**
+
+Creator and maintainer of **C3G – Cockpit Component Code Generator**.
+
+Built with a passion for flight simulation, electronics, and open-source software.
+
+---
+
+<p align="center">
+
+## C3G
+
+### Cockpit Component Code Generator
+
+**Design your cockpit.**
+
+**Generate your firmware.**
+
+**Fly with confidence.**
+
+---
+
+⭐ If C3G helps you build your cockpit, consider starring the repository to support future development.
+
+</p>
