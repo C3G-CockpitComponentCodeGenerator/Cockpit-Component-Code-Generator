@@ -221,55 +221,113 @@ FLY
 
 ---
 
-# Application Tour
+# Explore C3G
 
-## Dashboard
+Experience the complete cockpit development workflow through C3G's modern graphical interface.
 
-_The central workspace providing a complete overview of your cockpit project._
+<table>
+<tr>
 
-![Dashboard](docs/screenshots/dashboard.png)
+<td align="center" width="50%">
+
+### Dashboard
+
+Monitor your entire cockpit project from a single workspace.
+
+<a href="docs/screenshots/dashboard.png">
+    <img src="docs/screenshots/dashboard.png" width="100%">
+</a>
+
+</td>
+
+<td align="center" width="50%">
+
+### Project Settings
+
+Configure your board, project information and device settings.
+
+<a href="docs/screenshots/project-settings.png">
+<img src="docs/screenshots/project-settings.png" width="100%">
+</a>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="center">
+
+### Component Builder
+
+Configure supported cockpit hardware through an intuitive graphical interface.
+<a href="docs/screenshots/component-builder.png">
+<img src="docs/screenshots/component-builder.png" width="100%">
+</a>
+
+</td>
+
+<td align="center">
+
+### Interactive GPIO Map
+
+Visualize every GPIO assignment before firmware generation.
+<a href="docs/screenshots/gpio-map.png">
+<img src="docs/screenshots/gpio-map.png" width="100%">
+</a>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td align="center">
+
+### Expansion Manager
+
+Scale your cockpit with intelligent MCP23017 expansion management.
+<a href="docs/screenshots/expansion-manager.png">
+<img src="docs/screenshots/expansion-manager.png" width="100%">
+</a>
+
+</td>
+
+<td align="center">
+
+### MAX7219 Display Configuration
+
+Configure brightness, daisy-chain displays, decimal points, reverse digit order and zero suppression.
+<a href="docs/screenshots/max7219-display.png">
+<img src="docs/screenshots/max7219-display.png" width="100%">
+</a>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="2" align="center">
+
+### Firmware Preview
+
+Inspect clean, production-ready Arduino firmware before exporting.
+<a herf="docs/screenshots/firmware-preview.png">
+<img src="docs/screenshots/firmware-preview.png" width="90%">
+</a>
+
+</td>
+
+</tr>
+
+</table>
 
 ---
 
-## Component Builder
+Every screen has been designed to reduce configuration complexity while providing complete control over your cockpit hardware.
 
-_Configure supported cockpit hardware through an intuitive graphical interface._
-
-![Component Builder](docs/screenshots/component-builder.png)
-
----
-
-## Interactive GPIO Pin Map
-
-_Visualize every assigned pin before firmware generation._
-
-![GPIO Map](docs/screenshots/gpio-map.png)
-
----
-
-## Expansion Manager
-
-_Scale your cockpit with intelligent MCP23017 expansion management._
-
-![Expansion Manager](docs/screenshots/expansion-manager.png)
-
----
-
-## Firmware Preview
-
-_Inspect production-ready Arduino firmware before exporting._
-
-![Firmware Preview](docs/screenshots/firmware-preview.png)
-
----
-
-## Wiring Documentation
-
-_Generate organized wiring documentation to simplify cockpit assembly._
-
-![Wiring Documentation](docs/screenshots/wiring-documentation.png)
-
----
+From project planning to firmware generation, C3G guides you through the entire workflow using a modern visual interface.
 
 # Installation
 
