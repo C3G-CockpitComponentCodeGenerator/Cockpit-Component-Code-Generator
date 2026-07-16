@@ -125,4 +125,148 @@ Every supported feature has been designed with practical cockpit building in min
 
 Whether your project consists of a handful of switches or a fully featured simulator cockpit, C3G provides a dependable foundation for firmware generation and hardware configuration.
 
+<br>
+
+# Feature Highlights
+
+C3G combines intelligent hardware planning with automatic firmware generation to provide a complete workflow for building SPAD.neXt-compatible cockpit hardware.
+
+Unlike traditional Arduino development, C3G manages hardware resources, validates configurations, and generates production-ready firmware through a visual interface.
+
+| Feature                              | Description                                                                                                                                        |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ⚡ Automatic Firmware Generation     | Generate clean, production-ready Arduino firmware with a single click.                                                                             |
+| 🎯 Automatic & Manual Pin Allocation | Choose automatic GPIO allocation or manually assign pins for complete control.                                                                     |
+| 🗺 Interactive GPIO Pin Map          | Visualize every GPIO assignment with real-time synchronization between components and board resources.                                             |
+| 📊 Board Health Dashboard            | Monitor available GPIO, PWM, Analog, SPI, and I²C resources as your project grows.                                                                 |
+| 🔌 MCP23017 Expansion Support        | Expand digital inputs and outputs using intelligent GPIO expansion management.                                                                     |
+| 💡 MAX7219 Display Support           | Configure multiple seven-segment displays with daisy-chain support, decimal points, brightness control, reverse digit order, and zero suppression. |
+| 🖥 I²C Display Support               | Configure supported I²C displays without manual firmware coding.                                                                                   |
+| 📄 Wiring Documentation              | Automatically generate organized wiring documentation for your cockpit build.                                                                      |
+| 👀 Firmware Preview                  | Review generated firmware before exporting to your Arduino.                                                                                        |
+| ✅ Hardware Validated                | Every supported component has been tested on physical hardware before release.                                                                     |
+
+---
+
+# Supported Arduino Boards
+
+C3G currently supports the following Arduino platforms:
+
+| Board                      | Status |
+| -------------------------- | :----: |
+| Arduino Mega 2560          |   ✅   |
+| Arduino Mega 2560 Pro Mini |   ✅   |
+| Arduino Pro Micro          |   ✅   |
+
+Additional boards may be introduced in future releases.
+
+---
+
+# Supported Components
+
+C3G currently supports the following cockpit components.
+
+### Digital Inputs
+
+- Push Buttons
+- Toggle Switches (2 Position)
+- Toggle Switches (3 Position)
+- Rotary Encoders
+- Rotary Switches
+
+### Analog Inputs
+
+- Analog Axes
+
+### Outputs
+
+- LEDs
+- MAX7219 Seven Segment Displays
+- I²C Displays
+
+### Expansion Hardware
+
+- MCP23017 GPIO Expanders
+
+---
+
+# Typical Workflow
+
+From idea to working cockpit hardware in just a few steps.
+
+```text
+Choose a Board
+        │
+        ▼
+Configure Components
+        │
+        ▼
+Allocate GPIO Resources
+        │
+        ▼
+Review Interactive GPIO Map
+        │
+        ▼
+Generate Arduino Firmware
+        │
+        ▼
+Upload to Arduino
+        │
+        ▼
+Connect to SPAD.neXt
+        │
+        ▼
+FLY
+```
+
+---
+
+# Application Tour
+
+## Dashboard
+
+_The central workspace providing a complete overview of your cockpit project._
+
+![Dashboard](docs/screenshots/dashboard.png)
+
+---
+
+## Component Builder
+
+_Configure supported cockpit hardware through an intuitive graphical interface._
+
+![Component Builder](docs/screenshots/component-builder.png)
+
+---
+
+## Interactive GPIO Pin Map
+
+_Visualize every assigned pin before firmware generation._
+
+![GPIO Map](docs/screenshots/gpio-map.png)
+
+---
+
+## Expansion Manager
+
+_Scale your cockpit with intelligent MCP23017 expansion management._
+
+![Expansion Manager](docs/screenshots/expansion-manager.png)
+
+---
+
+## Firmware Preview
+
+_Inspect production-ready Arduino firmware before exporting._
+
+![Firmware Preview](docs/screenshots/firmware-preview.png)
+
+---
+
+## Wiring Documentation
+
+_Generate organized wiring documentation to simplify cockpit assembly._
+
+![Wiring Documentation](docs/screenshots/wiring-documentation.png)
+
 ---
