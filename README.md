@@ -20,7 +20,7 @@ Cockpit Component Code Generator
 
 <p align="center">
 
-A visual firmware generation toolkit for SPAD.neXt-compatible cockpit hardware.
+A visual cockpit engineering toolkit for designing, configuring, and generating SPAD.neXt-compatible Arduino firmware.
 
 </p>
 
