@@ -38,13 +38,34 @@ function generateSevenSegmentObjects(firmwareModel) {
     Object.values(displayGroups).forEach((group, index) => {
         const display = group[0];
 
-        const dinPin = display.pins.find((p) => p.startsWith('DIN:'));
+        if (display.pins.length < 3) {
+            console.error('Invalid seven segment pin allocation:', display);
+            return;
+        }
+
+        const din = display.pins[0].replace('BOARD:', '');
+
+        const clk = display.pins[1].replace('BOARD:', '');
+
+        const cs = display.pins[2].replace('BOARD:', '');
+
+        const modules = display.moduleCount;
+
+        /*   const dinPin = display.pins.find((p) => p.startsWith('DIN:'));
 
         const clkPin = display.pins.find((p) => p.startsWith('CLK:'));
 
         const csPin = display.pins.find((p) => p.startsWith('CS:'));
 
         const modulesPin = display.pins.find((p) => p.startsWith('Modules:'));
+        console.log(display);
+        console.log(display.pins);
+        console.log({
+            dinPin,
+            clkPin,
+            csPin,
+            modulesPin,
+        });
 
         const din = dinPin.replace('DIN:', '');
 
@@ -52,7 +73,7 @@ function generateSevenSegmentObjects(firmwareModel) {
 
         const cs = csPin.replace('CS:', '');
 
-        const modules = parseInt(modulesPin.replace('Modules:', ''));
+        const modules = parseInt(modulesPin.replace('Modules:', '')); */
 
         lines.push(
             `LedControl seg${index + 1}(
