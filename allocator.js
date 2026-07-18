@@ -630,7 +630,8 @@ function buildAllocationRows(project) {
 
             type: getComponentName(a.component),
 
-            pins: a.pins.join(', '),
+            // pins: a.pins.join(', '),
+            pins: formatPinAllocation(a.pins.join(', ')),
         };
     });
 }

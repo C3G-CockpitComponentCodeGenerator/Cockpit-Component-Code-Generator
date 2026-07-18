@@ -65,7 +65,8 @@ const BOARDS = {
 
         name: 'Arduino Mega 2560',
 
-        gpioPins: Array.from({ length: 54 }, (_, i) => i),
+        //  gpioPins: Array.from({ length: 54 }, (_, i) => i),
+        gpioPins: Array.from({ length: 70 }, (_, i) => i),
 
         reservedPins: {
             0: 'Serial RX',
@@ -129,7 +130,8 @@ const BOARDS = {
 
         name: 'Mega 2560 Pro Mini',
 
-        gpioPins: Array.from({ length: 54 }, (_, i) => i),
+        //   gpioPins: Array.from({ length: 54 }, (_, i) => i),
+        gpioPins: Array.from({ length: 70 }, (_, i) => i),
 
         reservedPins: {
             0: 'Serial RX',
@@ -199,4 +201,43 @@ function isReservedPin(board, pin) {
     }
 
     return !!board.reservedPins?.[pin];
+}
+
+// ====================================
+// Board Pin Display Helper
+// ====================================
+
+function getBoardPinLabel(board, pin) {
+    // If we were passed something that isn't a board definition,
+    // resolve the currently selected Arduino board.
+    if (!board || !board.analogPins) {
+        board = BOARDS[project.board];
+    }
+
+    const analogPin = board.analogPins?.find((p) => p.digital === pin);
+
+    if (analogPin) {
+        return `${analogPin.analog} (D${pin})`;
+    }
+
+    return String(pin);
+}
+
+function formatPinAllocation(pinAllocation) {
+    const board = BOARDS[project.board];
+
+    return pinAllocation
+        .split(',')
+        .map((entry) => {
+            entry = entry.trim();
+
+            if (!entry.startsWith('BOARD:')) {
+                return entry;
+            }
+
+            const pin = Number(entry.replace('BOARD:', ''));
+
+            return `BOARD:${getBoardPinLabel(board, pin)}`;
+        })
+        .join(', ');
 }

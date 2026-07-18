@@ -206,7 +206,8 @@ function updateComponentOptions() {
                 const option = document.createElement('option');
 
                 option.value = pin;
-                option.textContent = pin;
+                // option.textContent = pin;
+                option.textContent = getBoardPinLabel(board, pin);
 
                 select.appendChild(option);
             });
@@ -234,7 +235,7 @@ function updateComponentOptions() {
 
         option.value = pin;
 
-        option.textContent = pin;
+        option.textContent = getBoardPinLabel(board, pin);
 
         pinSelect.appendChild(option);
     });
@@ -273,15 +274,13 @@ function updateComponentOptions() {
             const optionA = document.createElement('option');
 
             optionA.value = pin;
-            optionA.textContent = pin;
-
+            optionA.textContent = getBoardPinLabel(board, pin);
             encoderPinA.appendChild(optionA);
 
             const optionB = document.createElement('option');
 
             optionB.value = pin;
-            optionB.textContent = pin;
-
+            optionB.textContent = getBoardPinLabel(board, pin);
             encoderPinB.appendChild(optionB);
         });
 
@@ -307,14 +306,14 @@ function updateComponentOptions() {
                 const optionA = document.createElement('option');
 
                 optionA.value = pin;
-                optionA.textContent = pin;
+                optionA.textContent = getBoardPinLabel(board, pin);
 
                 togglePinA.appendChild(optionA);
 
                 const optionB = document.createElement('option');
 
                 optionB.value = pin;
-                optionB.textContent = pin;
+                optionB.textContent = getBoardPinLabel(board, pin);
 
                 togglePinB.appendChild(optionB);
             });
@@ -342,15 +341,23 @@ function updateComponentOptions() {
     if (axisSelect) {
         axisSelect.innerHTML = '';
 
+        console.table(project.components);
         board.analogPins.forEach((pin) => {
+            const key = `BOARD:${pin.digital}`;
+
+            // Already assigned to another Axis
             if (usedAxisPins.includes(pin.analog)) {
+                return;
+            }
+
+            // Already used as a digital GPIO
+            if (usedPins.includes(`BOARD:${pin.digital}`)) {
                 return;
             }
 
             const option = document.createElement('option');
 
             option.value = pin.analog;
-
             option.textContent = pin.analog;
 
             axisSelect.appendChild(option);
@@ -2424,7 +2431,8 @@ function populateManualPinDropdown() {
         if (pinSelect) {
             const option = document.createElement('option');
             option.value = pin;
-            option.textContent = pin;
+
+            option.textContent = getBoardPinLabel(board, pin);
             pinSelect.appendChild(option);
         }
 
@@ -2432,21 +2440,25 @@ function populateManualPinDropdown() {
         if (segmentDIN) {
             const option = document.createElement('option');
             option.value = pin;
-            option.textContent = pin;
+
+            option.textContent = getBoardPinLabel(board, pin);
             segmentDIN.appendChild(option);
         }
 
         if (segmentCLK) {
             const option = document.createElement('option');
             option.value = pin;
-            option.textContent = pin;
+
+            option.textContent = getBoardPinLabel(board, pin);
+
             segmentCLK.appendChild(option);
         }
 
         if (segmentCS) {
             const option = document.createElement('option');
             option.value = pin;
-            option.textContent = pin;
+            //   option.textContent = pin;
+            option.textContent = getBoardPinLabel(board, pin);
             segmentCS.appendChild(option);
         }
     });
