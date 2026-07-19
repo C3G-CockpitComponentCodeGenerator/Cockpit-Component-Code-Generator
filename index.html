@@ -279,13 +279,50 @@
                         </div>
 
                         <div id="displayOptions" class="form-group" style="display: none">
-                            <label>Display Type</label>
+                            <label>Display Interface</label>
                             <select id="displayType">
                                 <option value="OLED_I2C">OLED I2C</option>
                                 <option value="LCD_I2C">LCD I2C</option>
                                 <option value="LCD_PARALLEL">LCD Parallel</option>
                                 <option value="TFT">TFT</option>
                             </select>
+                        </div>
+                        <div id="oledOptions" style="display: none">
+                            <div class="form-group">
+                                <label>Display Driver</label>
+                                <select id="displayDriver">
+                                    <option value="SSD1306" selected>SSD1306</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Display Size</label>
+                                <select id="displaySize">
+                                    <option value="0.91_128x32">0.91&quot; (128×32)</option>
+                                    <option value="0.96_128x64" selected>0.96&quot; (128×64)</option>
+                                    <option value="1.30_128x64">1.30&quot; (128×64)</option>
+                                    <option value="1.54_128x64">1.54&quot; (128×64)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Layout</label>
+                                <select id="displayLayout">
+                                    <option value="SINGLE">Single Large</option>
+                                    <option value="TWO">Two Row</option>
+                                    <option value="FOUR" selected>Four Row</option>
+                                    <option value="DENSE">Dense</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>I²C Address</label>
+                                <select id="displayAddress">
+                                    <option value="AUTO" selected>Auto Detect</option>
+                                    <option value="0x3C">0x3C</option>
+                                    <option value="0x3D">0x3D</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 

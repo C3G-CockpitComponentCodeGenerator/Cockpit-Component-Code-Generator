@@ -36,9 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!guidField.value) {
         guidField.value = '{' + crypto.randomUUID() + '}';
     }
-    //for (let i = 1; i <= 8; i++) {
-    //    document.getElementById(`displayDigit${i}`)?.addEventListener('change', updateDecimalOptions);
-    //  }
 
     document.getElementById('displayBrightness')?.addEventListener('input', (e) => {
         document.getElementById('brightnessValue').textContent = e.target.value;
@@ -46,6 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('brightnessValue').textContent = document.getElementById('displayBrightness')?.value ?? '0';
     validateGUIDField();
+
+    document.getElementById('displayType')?.addEventListener('change', updateComponentOptions);
 
     updateComponentOptions();
 
@@ -400,10 +399,6 @@ function updateComponentOptions() {
     sevenSegmentPinOptions.style.display =
         project.allocationMode === 'MANUAL' && type === 'sevensegment' ? 'block' : 'none';
 
-    /* deviceOptions.style.display =
-        project.allocationMode === 'MANUAL' && ['pushbutton', 'toggle', 'encoder', 'rotaryswitch', 'led'].includes(type)
-            ? 'block'
-            : 'none'; */
     deviceOptions.style.display = project.allocationMode === 'MANUAL' ? 'block' : 'none';
 
     rotaryPinOptions.style.display = project.allocationMode === 'MANUAL' && type === 'rotaryswitch' ? 'block' : 'none';
@@ -468,16 +463,19 @@ function updateComponentOptions() {
         case 'display':
             document.getElementById('displayOptions').style.display = 'block';
 
+            // OLED options visibility
+            const displayType = document.getElementById('displayType').value;
+
+            if (displayType === 'OLED_I2C') {
+                document.getElementById('oledOptions').style.display = 'block';
+            } else {
+                document.getElementById('oledOptions').style.display = 'none';
+            }
+
             pinsRequired = 0;
 
             break;
     }
-
-    /*   const manualPinLabel = document.getElementById('manualPinLabel');
-
-    if (manualPinLabel) {
-        manualPinLabel.textContent = type === 'sevensegment' ? 'CS Pin' : 'GPIO Pin';
-    } */
 
     const manualPinLabel = document.getElementById('manualPinLabel');
 
@@ -2214,15 +2212,7 @@ function validateDisplayLayout() {
  * This function should be called once during application startup.
  * ================================================================
  */
-/*function initializeDisplayLayout() {
-    // ------------------------------------------------------------
-    // Physical Digit Checkboxes
-    // ------------------------------------------------------------
 
-    for (let i = 1; i <= 8; i++) {
-        document.getElementById(`displayDigit${i}`).addEventListener('change', updateDisplayLayout);
-    }
-} */
 function initializeDisplayLayout() {
     // ------------------------------------------------------------
     // Physical Digit Checkboxes
