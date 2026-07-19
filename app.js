@@ -363,13 +363,15 @@ function updateComponentOptions() {
         });
     }
 
+    const displayInterface = document.getElementById('displayType')?.value;
     manualPins.style.display =
         project.allocationMode === 'MANUAL' &&
         type !== 'axis' &&
         type !== 'encoder' &&
         type !== 'rotaryswitch' &&
         type !== 'sevensegment' &&
-        !(type === 'toggle' && parseInt(document.getElementById('togglePositions').value) === 3)
+        !(type === 'toggle' && parseInt(document.getElementById('togglePositions').value) === 3) &&
+        !(type === 'display' && (displayInterface === 'OLED_I2C' || displayInterface === 'LCD_I2C'))
             ? 'block'
             : 'none';
 
@@ -466,12 +468,30 @@ function updateComponentOptions() {
             // OLED options visibility
             const displayType = document.getElementById('displayType').value;
 
-            if (displayType === 'OLED_I2C') {
-                document.getElementById('oledOptions').style.display = 'block';
-            } else {
-                document.getElementById('oledOptions').style.display = 'none';
-            }
+            const oledOptions = document.getElementById('oledOptions');
+            const manualPinOptions = document.getElementById('manualPinOptions');
 
+            switch (displayType) {
+                case 'OLED_I2C':
+                    oledOptions.style.display = 'block';
+
+                    break;
+
+                case 'LCD_I2C':
+                    oledOptions.style.display = 'none';
+
+                    break;
+
+                case 'LCD_PARALLEL':
+                    oledOptions.style.display = 'none';
+
+                    break;
+
+                default:
+                    oledOptions.style.display = 'none';
+
+                    break;
+            }
             pinsRequired = 0;
 
             break;
@@ -499,6 +519,7 @@ function hideAllOptions() {
         'ledOptions',
         'sevenSegmentOptions',
         'displayOptions',
+        'oledOptions',
     ];
 
     document.getElementById('pushButtonOptions').style.display = 'none';
