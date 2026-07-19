@@ -818,6 +818,15 @@ for each position.`
 
         case 'display':
             component.displayType = document.getElementById('displayType').value;
+
+            component.displayDriver = document.getElementById('displayDriver').value;
+
+            component.displaySize = document.getElementById('displaySize').value;
+
+            component.displayLayout = document.getElementById('displayLayout').value;
+
+            component.displayAddress = document.getElementById('displayAddress').value;
+
             break;
     }
 
