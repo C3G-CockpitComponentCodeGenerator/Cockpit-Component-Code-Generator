@@ -115,7 +115,7 @@ function updateComponentOptions() {
     const selectedDevice = document.getElementById('manualAssignedDevice').value;
 
     const usedPins = [];
-    //  populateAssignedDeviceDropdown();
+
     updateAssignedDeviceState();
 
     project.components.forEach((c, index) => {
@@ -125,22 +125,20 @@ function updateComponentOptions() {
         if (c.manualPin !== undefined) {
             usedPins.push(`${c.assignedDevice}:${c.manualPin}`);
         }
-        /* if (c.manualPin !== undefined) {
-            usedPins.push(c.manualPin);
-        }*/
 
         if (c.manualPinA !== undefined) {
-            //  usedPins.push(c.manualPinA);
             usedPins.push(`${c.assignedDevice}:${c.manualPinA}`);
         }
 
         if (c.manualPinB !== undefined) {
-            // usedPins.push(c.manualPinB);
             usedPins.push(`${c.assignedDevice}:${c.manualPinB}`);
         }
 
+        if (c.manualAxisPin !== undefined) {
+            usedPins.push(`${c.assignedDevice}:${c.manualAxisPin}`);
+        }
+
         if (c.manualPins) {
-            // usedPins.push(...c.manualPins);
             c.manualPins.forEach((pin) => {
                 usedPins.push(`${c.assignedDevice}:${pin}`);
             });
@@ -160,7 +158,11 @@ function updateComponentOptions() {
             }
         }
     });
+    console.log('===== COMPONENTS =====');
+    console.table(project.components);
 
+    console.log('===== USED PINS =====');
+    console.log(usedPins);
     //----create the rotary dropdowns----
 
     if (project.allocationMode === 'MANUAL' && type === 'rotaryswitch') {
@@ -219,10 +221,25 @@ function updateComponentOptions() {
         }
         updateRotaryPinDropdowns();
     }
-
+    // console.log('GPIO usedPins:', usedPins);
     board.gpioPins.forEach((pin) => {
+        //   console.log('Checking', pin, 'against', usedPins);
         const pinKey = `${selectedDevice}:${pin}`;
-        if (usedPins.includes(pin)) {
+        const match = usedPins.includes(pinKey);
+        if (pin === 54) {
+            console.log({
+                selectedDevice,
+                pin,
+                pinKey,
+                usedPins,
+            });
+        }
+
+        if (match) {
+            return;
+        }
+
+        if (usedPins.includes(pinKey)) {
             return;
         }
 
@@ -235,7 +252,7 @@ function updateComponentOptions() {
         option.value = pin;
 
         option.textContent = getBoardPinLabel(board, pin);
-
+        console.log('Checking', pin, 'against', usedPins);
         pinSelect.appendChild(option);
     });
     const encoderPinA = document.getElementById('manualEncoderPinA');
@@ -345,7 +362,11 @@ function updateComponentOptions() {
             const key = `BOARD:${pin.digital}`;
 
             // Already assigned to another Axis
-            if (usedAxisPins.includes(pin.analog)) {
+            /*   if (usedAxisPins.includes(pin.analog)) {
+                return;
+            } */
+
+            if (usedAxisPins.includes(pin.digital)) {
                 return;
             }
 
@@ -808,7 +829,11 @@ for each position.`
             component.axisType = document.getElementById('axisType').value;
 
             if (project.allocationMode === 'MANUAL') {
-                component.manualAxisPin = document.getElementById('manualAxisPin').value;
+                const axisPinSelect = document.getElementById('manualAxisPin');
+
+                if (axisPinSelect) {
+                    component.manualAxisPin = getBoardDigitalPin(board, axisPinSelect.value);
+                }
             }
 
             break;
@@ -2400,6 +2425,10 @@ function populateManualPinDropdown() {
             usedPins.push(`${c.assignedDevice}:${c.manualPinB}`);
         }
 
+        if (c.manualAxisPin !== undefined && c.manualAxisPin !== null) {
+            usedPins.push(`${c.assignedDevice}:${c.manualAxisPin}`);
+        }
+
         if (c.manualPins) {
             c.manualPins.forEach((pin) => {
                 usedPins.push(`${c.assignedDevice}:${pin}`);
@@ -3689,20 +3718,6 @@ function renderSegment(segment, active, colorOn, colorOff) {
  * Renders one 7-segment LED using the master segment path and layout.
  * =====================================================================
  */
-/*function renderSegment(segmentName, active, colorOn, colorOff) {
-    const layout = SEGMENT_LAYOUT[segmentName];
-
-    return `
-        <path
-            d="${MASTER_SEGMENT_PATH}"
-            transform="
-                translate(${layout.x},${layout.y})
-                rotate(${layout.rotation},26,4)
-            "
-            fill="${active ? colorOn : colorOff}"
-        />
-    `;
-} */
 
 function renderHorizontalSegment(active, colorOn, colorOff) {}
 

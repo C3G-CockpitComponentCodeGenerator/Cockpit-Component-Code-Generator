@@ -223,6 +223,38 @@ function getBoardPinLabel(board, pin) {
     return String(pin);
 }
 
+// ====================================
+// Canonical Pin Helpers
+// ====================================
+
+function getBoardDigitalPin(board, pinLabel) {
+    if (!board || !board.analogPins) {
+        board = BOARDS[project.board];
+    }
+
+    const analogPin = board.analogPins.find((p) => p.analog === pinLabel);
+
+    return analogPin ? analogPin.digital : Number(pinLabel);
+}
+
+function getBoardAnalogLabel(board, digitalPin) {
+    if (!board || !board.analogPins) {
+        board = BOARDS[project.board];
+    }
+
+    const analogPin = board.analogPins.find((p) => p.digital === Number(digitalPin));
+
+    return analogPin ? analogPin.analog : null;
+}
+
+function isAnalogBoardPin(board, digitalPin) {
+    if (!board || !board.analogPins) {
+        board = BOARDS[project.board];
+    }
+
+    return board.analogPins.some((p) => p.digital === Number(digitalPin));
+}
+
 function formatPinAllocation(pinAllocation) {
     const board = BOARDS[project.board];
 

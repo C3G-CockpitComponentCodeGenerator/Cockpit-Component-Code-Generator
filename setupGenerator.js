@@ -66,34 +66,6 @@ function generateSetupSection(firmwareModel) {
     ].join('\n');
 }
 
-/*function generateOutputPinSetup(device) {
-
-    const lines = [];
-
-    device.pins.forEach(pin => {
-
-        if (
-            typeof pin === "string" &&
-            pin.startsWith("BOARD:")
-        ) {
-
-            const gpio =
-                pin.replace("BOARD:", "");
-
-            lines.push(
-                `pinMode(${gpio}, OUTPUT);`
-            );
-
-            lines.push(
-                `digitalWrite(${gpio}, LOW);`
-            );
-        }
-
-    });
-
-    return lines.join("\n");
-}*/
-
 function generateOutputPinSetup(device) {
     const lines = [];
 

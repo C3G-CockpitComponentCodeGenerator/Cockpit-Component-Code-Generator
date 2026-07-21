@@ -89,15 +89,14 @@ function allocatePins(project) {
     const axisComponents = project.components.filter((c) => c.type === 'axis');
 
     for (const axis of axisComponents) {
-        let analogPin;
+        let digitalPin;
 
         if (project.allocationMode === 'MANUAL') {
-            analogPin = board.analogPins.find((p) => p.analog === axis.manualAxisPin);
+            digitalPin = getBoardDigitalPin(board, axis.manualAxisPin);
 
-            if (analogPin && isReserved(analogPin.digital)) {
+            if (isReserved(digitalPin)) {
                 errors.push({
                     component: axis,
-
                     reason: 'Analog Pin Already Used',
                 });
 
@@ -107,28 +106,28 @@ function allocatePins(project) {
                 };
             }
         } else {
-            analogPin = board.analogPins.find((p) => !isReserved(p.digital));
+            const analogPin = board.analogPins.find((p) => !isReserved(p.digital));
+
+            if (!analogPin) {
+                errors.push({
+                    component: axis,
+                    reason: 'ANALOG_EXHAUSTED',
+                });
+
+                return {
+                    valid: false,
+                    errors,
+                };
+            }
+
+            digitalPin = analogPin.digital;
         }
 
-        if (!analogPin) {
-            errors.push({
-                component: axis,
-
-                reason: 'ANALOG_EXHAUSTED',
-            });
-
-            return {
-                valid: false,
-                errors,
-            };
-        }
-
-        reservePin(analogPin.digital);
+        reservePin(digitalPin);
 
         allocations.push({
             component: axis,
-
-            pins: [analogPin.analog],
+            pins: [digitalPin],
         });
     }
 
@@ -236,7 +235,6 @@ function allocatePins(project) {
 
                 reservePin(pin);
 
-                //   assigned.push(pin);
                 assigned.push(`BOARD:${pin}`);
             }
         }

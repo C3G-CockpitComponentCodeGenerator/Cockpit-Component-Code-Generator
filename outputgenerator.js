@@ -19,36 +19,6 @@ function generateDeviceLedHandler(firmwareModel) {
 
     lines.push('    {');
 
-    /*firmwareModel.outputs
-    .filter(
-        output =>
-            output.componentType === "led"
-    )
-    .forEach(
-        output => {
-
-            const pin =
-                output.pins[0]
-                    .replace(
-                        "BOARD:",
-                        ""
-                    );
-
-            lines.push(
-                `        case ${output.id}:`
-            );
-
-            lines.push(
-                `            digitalWrite(${pin}, ledVal ? HIGH : LOW);`
-            );
-
-            lines.push(
-                "            break;"
-            );
-
-            lines.push("");
-        }
-    );*/
     firmwareModel.outputs
         .filter((output) => output.componentType === 'led')
         .forEach((output) => {
