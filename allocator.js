@@ -127,7 +127,8 @@ function allocatePins(project) {
 
         allocations.push({
             component: axis,
-            pins: [digitalPin],
+            // pins: [digitalPin],
+            pins: [`BOARD:${digitalPin}`],
         });
     }
 

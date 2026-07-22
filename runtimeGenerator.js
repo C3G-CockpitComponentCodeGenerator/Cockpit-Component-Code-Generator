@@ -1,105 +1,61 @@
-function generateInputDispatcher(
-    firmwareModel
-) {
-
+function generateInputDispatcher(firmwareModel) {
     const lines = [];
 
-    lines.push(
-        "void CheckAllInputs()"
-    );
+    lines.push('void CheckAllInputs()');
 
-    lines.push("{");
+    lines.push('{');
 
-    const hasButtons =
-        firmwareModel.inputs.some(
+    const hasButtons = firmwareModel.inputs.some((d) => d.componentType === 'pushbutton');
 
-            d =>
+    const hasSwitches = firmwareModel.inputs.some((d) => d.componentType === 'toggle');
 
-                d.componentType ===
-                "pushbutton"
-        );
+    const hasEncoders = firmwareModel.inputs.some((d) => d.componentType === 'encoder');
 
-    const hasSwitches =
-        firmwareModel.inputs.some(
+    const hasRotaries = firmwareModel.inputs.some((d) => d.componentType === 'rotaryswitch');
 
-            d =>
-
-                d.componentType ===
-                "toggle"
-        );
-
-    const hasEncoders =
-        firmwareModel.inputs.some(
-
-             d =>
-
-                d.componentType ===
-                 "encoder"
-        );
-    
-    const hasRotaries =
-    firmwareModel.inputs.some(
-
-        d =>
-
-            d.componentType ===
-            "rotaryswitch"
-    );
+    const hasAxis = firmwareModel.inputs.some((device) => device.componentType === 'axis');
 
     if (hasButtons) {
-
-        lines.push(
-            "    CheckAllButtons();"
-        );
+        lines.push('    CheckAllButtons();');
     }
 
     if (hasSwitches) {
-
-        lines.push(
-            "    CheckAllSwitches();"
-        );
+        lines.push('    CheckAllSwitches();');
     }
 
     if (hasEncoders) {
+        lines.push('    CheckAllEncoders();');
+    }
 
-    lines.push(
-        "    CheckAllEncoders();"
-    );
+    if (hasAxis) {
+        lines.push('    CheckAllAxis();');
+    }
+
+    if (hasRotaries) {
+        lines.push('    CheckAllRotaries();');
+    }
+
+    lines.push('}');
+
+    return lines.join('\n');
 }
 
-if (hasRotaries) {
-
-    lines.push(
-        "    CheckAllRotaries();"
-    );
-}
-
-    lines.push("}");
-
-    return lines.join("\n");
-}
-
-function generateLoopSection(
-    firmwareModel
-) {
-
+function generateLoopSection(firmwareModel) {
     return [
+        'void loop()',
+        '{',
 
-        "void loop()",
-        "{",
+        '    if (isStarted)',
+        '    {',
 
-        "    if (isStarted)",
-        "    {",
+        '        CheckAllInputs();',
 
-        "        CheckAllInputs();",
+        '    }',
 
-        "    }",
+        '',
 
-        "",
+        '    messenger.feedinSerialData();',
 
-        "    messenger.feedinSerialData();",
-
-        "}"
-
-    ].join("\n");
+        '}',
+    ].join('\n');
 }

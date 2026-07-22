@@ -1,140 +1,102 @@
-function generateFirmware(
-    firmwareModel
-)
-{
+function generateFirmware(firmwareModel) {
     return [
+        '// GENERATED FIRMWARE',
 
-        "// GENERATED FIRMWARE",
+        '#include <CmdMessenger.h>',
+        '#include <Encoder.h>',
+        '#include <string.h>',
+        generateMCPIncludes(project),
+        '',
+        generateSevenSegmentIncludes(firmwareModel),
 
-"#include <CmdMessenger.h>",
-"#include <Encoder.h>",
-"#include <string.h>",
-generateMCPIncludes(project),
-"",
-generateSevenSegmentIncludes(
-    firmwareModel
-),
+        'CmdMessenger messenger(Serial);',
+        '',
 
-"CmdMessenger messenger(Serial);",
-"",
+        generateGlobalDefinitions(firmwareModel),
 
-generateGlobalDefinitions(
-    firmwareModel
-),
+        '',
+        generateMCPObjects(project),
 
-"",
-generateMCPObjects(project),
+        '',
 
-"",
+        generateSevenSegmentObjects(firmwareModel),
 
-generateSevenSegmentObjects(
-    firmwareModel
-),
+        '',
 
-"",
+        generateRuntimeGlobals(),
 
+        '',
 
-generateRuntimeGlobals(),
+        generateButtonVariables(firmwareModel),
 
-"",
+        '',
 
-        generateButtonVariables(
-            firmwareModel
-        ),
+        generateAxisVariables(firmwareModel),
 
-        "",
+        '',
 
-        generateSwitchVariables(
-            firmwareModel
-        ),
+        generateSwitchVariables(firmwareModel),
 
-        "",
+        '',
 
-        generateEncoderVariables(
-            firmwareModel
-        ),
+        generateEncoderVariables(firmwareModel),
 
-        "",
+        '',
 
-        generateRotaryVariables(
-    firmwareModel
-),
-"",
+        generateRotaryVariables(firmwareModel),
+        '',
 
-        generateEncoderObjects(
-            firmwareModel
-        ),
+        generateEncoderObjects(firmwareModel),
 
-        "",
+        '',
 
-       generateAttachCallbacks(
-    firmwareModel
-),
+        generateAttachCallbacks(firmwareModel),
 
-        "",
+        '',
         generateUnknownCommandHandler(),
 
-"",
+        '',
 
-generateSpadEventHandler(),
+        generateSpadEventHandler(),
 
-"",
+        '',
 
-generateDeviceLedHandler(
-    firmwareModel
-),
+        generateDeviceLedHandler(firmwareModel),
 
-"",
+        '',
 
-generateDisplayUpdateHandler(
-    firmwareModel
-),
+        generateDisplayUpdateHandler(firmwareModel),
 
-        generateSetupSection(
-            firmwareModel
-        ),
+        generateSetupSection(firmwareModel),
 
-        "",
+        '',
 
-        generateButtonScanner(
-            firmwareModel
-        ),
+        generateButtonScanner(firmwareModel),
 
-        "",
+        '',
 
-        generateSwitchScanner(
-            firmwareModel
-        ),
+        generateSwitchScanner(firmwareModel),
 
-        "",
+        '',
 
-        generateEncoderScanner(
-            firmwareModel
-        ),
+        generateEncoderScanner(firmwareModel),
 
-        "",
+        '',
+        generateAxisScanner(firmwareModel),
 
-        
-        generateRotaryScanner(
-            firmwareModel
-        ),
-        "",
+        '',
 
-       generateInputDispatcher(
-            firmwareModel
-        ),
+        generateRotaryScanner(firmwareModel),
+        '',
 
-        "",
+        generateInputDispatcher(firmwareModel),
 
-generateIdentifyHandler(
-    firmwareModel
-),
+        '',
 
-"",
+        generateIdentifyHandler(firmwareModel),
 
-generateLoopSection(
-    firmwareModel
-)
+        '',
 
-    ].join("\n");
+        generateLoopSection(firmwareModel),
+    ].join('\n');
 }

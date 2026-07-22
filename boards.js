@@ -207,7 +207,7 @@ function isReservedPin(board, pin) {
 // Board Pin Display Helper
 // ====================================
 
-function getBoardPinLabel(board, pin) {
+/*function getBoardPinLabel(board, pin) {
     // If we were passed something that isn't a board definition,
     // resolve the currently selected Arduino board.
     if (!board || !board.analogPins) {
@@ -218,6 +218,22 @@ function getBoardPinLabel(board, pin) {
 
     if (analogPin) {
         return `${analogPin.analog} (D${pin})`;
+    }
+
+    return String(pin);
+} */
+
+function getBoardPinLabel(board, pin) {
+    // If we were passed something that isn't a board definition,
+    // resolve the currently selected Arduino board.
+    if (!board || !board.analogPins) {
+        board = BOARDS[project.board];
+    }
+
+    const analogPin = board.analogPins?.find((p) => p.digital === Number(pin));
+
+    if (analogPin) {
+        return `${pin} (${analogPin.analog})`;
     }
 
     return String(pin);

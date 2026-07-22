@@ -959,8 +959,12 @@ function editComponent(index) {
             updateRotaryPinDropdowns();
         }
     }
-    if (c.manualAxisPin) {
+    /*  if (c.manualAxisPin) {
         document.getElementById('manualAxisPin').value = c.manualAxisPin;
+    } */
+
+    if (c.manualAxisPin !== undefined) {
+        document.getElementById('manualAxisPin').value = getBoardAnalogLabel(BOARDS[project.board], c.manualAxisPin);
     }
 
     if (c.ledType) document.getElementById('ledType').value = c.ledType;
@@ -3039,7 +3043,8 @@ function getComponentPinAllocation(component) {
         return '-';
     }
 
-    return item.pins.join(', ');
+    //   return item.pins.join(', ');
+    return formatPinAllocation(item.pins.join(', '));
 }
 
 function generateArduinoCode() {
