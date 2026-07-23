@@ -55,6 +55,53 @@ function generateDisplaySetup(firmwareModel) {
     ].join('\n');
 }
 
+/* function generateDisplayFiles(firmwareModel) {
+    const displays = firmwareModel.outputs.filter((d) => d.componentType === 'display');
+
+    if (displays.length === 0) return [];
+
+    return [
+        {
+            type: 'header',
+            name: 'DisplayManager.h',
+            content: '// Display Manager Header',
+        },
+        {
+            type: 'source',
+            name: 'DisplayManager.cpp',
+            content: '// Display Manager Source',
+        },
+    ];
+} */
+
+//====================================================
+// Display Project Files
+//====================================================
+
+function generateDisplayFiles(firmwareModel) {
+    const displays = firmwareModel.outputs.filter((d) => d.componentType === 'display');
+
+    if (displays.length === 0) {
+        return [];
+    }
+
+    return [
+        {
+            type: 'header',
+
+            name: 'DisplayManager.h',
+
+            content: '// TODO - Generated DisplayManager header',
+        },
+        {
+            type: 'source',
+
+            name: 'DisplayManager.cpp',
+
+            content: '// TODO - Generated DisplayManager source',
+        },
+    ];
+}
 //====================================================
 // Callback Registration
 //====================================================

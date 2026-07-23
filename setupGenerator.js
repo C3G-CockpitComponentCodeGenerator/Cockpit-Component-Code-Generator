@@ -47,6 +47,8 @@ function generateSetupSection(firmwareModel) {
 
     const mcpSetup = generateMCPSetup(project);
 
+    const displaySetup = generateDisplaySetup(firmwareModel);
+
     return [
         'void setup()',
         '{',
