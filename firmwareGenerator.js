@@ -9,6 +9,8 @@ function generateFirmware(firmwareModel) {
         '',
         generateSevenSegmentIncludes(firmwareModel),
 
+        generateDisplayIncludes(firmwareModel),
+
         'CmdMessenger messenger(Serial);',
         '',
 
@@ -21,6 +23,9 @@ function generateFirmware(firmwareModel) {
 
         generateSevenSegmentObjects(firmwareModel),
 
+        '',
+
+        generateDisplayObjects(firmwareModel),
         '',
 
         generateRuntimeGlobals(),

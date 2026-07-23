@@ -158,11 +158,11 @@ function updateComponentOptions() {
             }
         }
     });
-    console.log('===== COMPONENTS =====');
-    console.table(project.components);
+    // console.log('===== COMPONENTS =====');
+    //  console.table(project.components);
 
-    console.log('===== USED PINS =====');
-    console.log(usedPins);
+    // console.log('===== USED PINS =====');
+    // console.log(usedPins);
     //----create the rotary dropdowns----
 
     if (project.allocationMode === 'MANUAL' && type === 'rotaryswitch') {
@@ -252,7 +252,7 @@ function updateComponentOptions() {
         option.value = pin;
 
         option.textContent = getBoardPinLabel(board, pin);
-        console.log('Checking', pin, 'against', usedPins);
+        //  console.log('Checking', pin, 'against', usedPins);
         pinSelect.appendChild(option);
     });
     const encoderPinA = document.getElementById('manualEncoderPinA');

@@ -27,7 +27,13 @@ function generateFirmwareModel(deviceModel) {
 
             // direction: "INPUT",
 
-            direction: device.componentType === 'led' || device.componentType === 'sevensegment' ? 'OUTPUT' : 'INPUT',
+            //  direction: device.componentType === 'led' || device.componentType === 'sevensegment' ? 'OUTPUT' : 'INPUT',
+            direction:
+                device.componentType === 'led' ||
+                device.componentType === 'sevensegment' ||
+                device.componentType === 'display'
+                    ? 'OUTPUT'
+                    : 'INPUT',
 
             type: device.spadType,
 
@@ -72,6 +78,6 @@ function generateFirmwareModel(deviceModel) {
             firmwareModel.outputs.push(entry);
         }
     });
-
+    console.log(firmwareModel);
     return firmwareModel;
 }

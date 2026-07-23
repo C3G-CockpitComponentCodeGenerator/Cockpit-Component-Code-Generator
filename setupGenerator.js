@@ -6,42 +6,6 @@ function generateSetupPins(firmwareModel) {
     return [inputPins, outputPins].join('\n');
 }
 
-/*function generateInputPinSetup(device) {
-    const lines = [];
-
-    device.pins.forEach((pin) => {
-        // BOARD GPIO
-
-        if (typeof pin === 'string' && pin.startsWith('BOARD:')) {
-            const gpio = pin.replace('BOARD:', '');
-
-            lines.push(`pinMode(${gpio}, INPUT_PULLUP);`);
-
-            return;
-        }
-
-        // MCP GPIO
-
-        if (typeof pin === 'string' && pin.startsWith('0x')) {
-            const [address, pinName] = pin.split(':');
-
-            const mcpName = address.replace('0x', 'mcp');
-
-            let mcpPin = 0;
-
-            if (pinName.startsWith('GPA')) {
-                mcpPin = parseInt(pinName.replace('GPA', ''));
-            } else if (pinName.startsWith('GPB')) {
-                mcpPin = 8 + parseInt(pinName.replace('GPB', ''));
-            }
-
-            lines.push(`${mcpName}.pinMode(${mcpPin}, INPUT_PULLUP);`);
-        }
-    });
-
-    return lines.join('\n');
-} */
-
 function generateInputPinSetup(device) {
     const lines = [];
 
@@ -90,6 +54,7 @@ function generateSetupSection(firmwareModel) {
         '    Serial.begin(115200);',
         '',
         generateSevenSegmentSetup(firmwareModel),
+        generateDisplaySetup(firmwareModel),
         mcpSetup,
         '',
 
