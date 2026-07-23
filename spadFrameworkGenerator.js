@@ -136,7 +136,12 @@ function generateAttachCallbacks(firmwareModel) {
         lines.push('    messenger.attach(6, onDeviceLed);');
     }
 
-    const hasDisplay = firmwareModel.outputs.some((d) => d.componentType === 'sevensegment');
+    /* const hasDisplay = firmwareModel.outputs.some((d) => d.componentType === 'sevensegment');
+
+    if (hasDisplay) {
+        lines.push('    messenger.attach(7, onDisplayUpdate);');
+    } */
+    const hasDisplay = firmwareModel.outputs.some((d) => ['sevensegment', 'display'].includes(d.componentType));
 
     if (hasDisplay) {
         lines.push('    messenger.attach(7, onDisplayUpdate);');
