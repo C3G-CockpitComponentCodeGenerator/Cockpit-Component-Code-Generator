@@ -6,6 +6,7 @@ function generateDeviceModel(project) {
     }
 
     const devices = [];
+    let nextDisplayIndex = 1;
 
     allocationResult.allocations.forEach((allocation) => {
         const component = allocation.component;
@@ -32,7 +33,8 @@ function generateDeviceModel(project) {
                         return `BOARD:${pin}`;
                     }),
 
-                    displayIndex: index + 1,
+                    // displayIndex: index + 1,
+                    displayIndex: nextDisplayIndex++,
 
                     moduleIndex: index,
 
