@@ -65,6 +65,16 @@ function generateDeviceModel(project) {
                 return `BOARD:${pin}`;
             }),
 
+            displayIndex: component.type === 'display' ? nextDisplayIndex++ : undefined,
+
+            displayType: component.displayType,
+
+            displayDriver: component.displayDriver,
+
+            displayLayout: component.displayLayout,
+
+            displayAddress: component.displayAddress,
+
             encoderMode: component.encoderMode,
 
             positions: component.positions,
